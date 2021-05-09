@@ -1,4 +1,5 @@
 import argparse
+import csv
 import json
 import time
 
@@ -14,20 +15,36 @@ from pysecube.wrapper import Wrapper
 
 PYSECUBE_PIN = b"test"
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
-TARGET_DIR = path.join("traces", "rvtee", TEST_TIME)
+OUT_DIR = path.join("out", "rvtee", TEST_TIME)
 
 trace = []
+timings = []
 
 def save_and_clear_trace(trace_id):
     global trace
 
     # If the target directory does not exist, create it
-    if not path.exists(TARGET_DIR):
-        mkdir(TARGET_DIR)
+    if not path.exists(OUT_DIR):
+        mkdir(OUT_DIR)
 
-    with open(path.join(TARGET_DIR, f"{trace_id}.json"), "w") as stream:
+    with open(path.join(OUT_DIR, f"{trace_id}.json"), "w") as stream:
         json.dump(trace, stream, indent=4)
+
+    # Clear
     trace = []
+
+def save_timings():
+    global timings
+
+    # If the target directory does not exist, create it
+    if not path.exists(OUT_DIR):
+        mkdir(OUT_DIR)
+    
+    with open(path.join(OUT_DIR, "timings.csv"), "w", newline="") as stream:
+        csv_out=csv.writer(stream)
+        csv_out.writerow(["start_time", "end_time", "time_taken"])
+        for timing in timings:
+            csv_out.writerow(timing)
 
 def add_event(when, what, scope, watch, func_args, func_kwargs):
     global trace
@@ -70,7 +87,7 @@ parser.add_argument("--command", "-c", type=str, required=True)
 parser.add_argument("--reps", "-r", type=int, required=True)
 args = parser.parse_args()
 
-print(f"Trace(s) will be saved in {TARGET_DIR}")
+print(f"Result(s) will be saved in {OUT_DIR}")
 
 for i in range(args.reps):
     start_time = None
@@ -112,6 +129,7 @@ for i in range(args.reps):
         print(e)
         pass
 
+    timings.append((start_time, end_time, end_time - start_time))
 
     save_and_clear_trace(i)
-    print(f"{start_time},{end_time},{end_time - start_time}")
+save_timings()
