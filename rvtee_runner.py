@@ -1,11 +1,66 @@
-from paramiko import (SSHClient)
+import argparse
+import json
+import time
+
+from datetime import datetime
+from os import path, mkdir
+
+import aspectlib
+import paramiko
+
 from paramiko.config import SSH_PORT
 
 from pysecube.wrapper import Wrapper
 
-import argparse
-import time
+PYSECUBE_PIN = b"test"
+TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
+TARGET_DIR = path.join("traces", "rvtee", TEST_TIME)
 
+trace = []
+
+def save_and_clear_trace(trace_id):
+    global trace
+
+    # If the target directory does not exist, create it
+    if not path.exists(TARGET_DIR):
+        mkdir(TARGET_DIR)
+
+    with open(path.join(TARGET_DIR, f"{trace_id}.json"), "w") as stream:
+        json.dump(trace, stream, indent=4)
+    trace = []
+
+def add_event(when, what, scope, watch, func_args, func_kwargs):
+    global trace
+
+    trace.append(
+        {
+            "timestamp": int(time.time()),
+            "when": when,
+            "what": what,
+            "scope": scope,
+            "watch": watch,
+            "func_args": func_args,
+            "func_kwargs": func_kwargs,
+        }
+    )
+
+# The "none" cipher is provided for debugging and SHOULD NOT be used
+# except for that purpose.
+@aspectlib.Aspect
+def paramiko_transport_send_kex_init(*args, **kwargs):
+    add_event("BEFORE", "_send_kex_init", "paramiko.Transport", {
+        "preferred_ciphers": args[0].preferred_ciphers
+    }, args[1:], kwargs)
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.Transport._send_kex_init,
+                paramiko_transport_send_kex_init)
+
+# CLI argument parsing
 parser = argparse.ArgumentParser(
     description="PySEcube test driver")
 parser.add_argument("--host", "-H", type=str, required=True)
@@ -15,7 +70,7 @@ parser.add_argument("--command", "-c", type=str, required=True)
 parser.add_argument("--reps", "-r", type=int, required=True)
 args = parser.parse_args()
 
-PYSECUBE_PIN = b"test"
+print(f"Trace(s) will be saved in {TARGET_DIR}")
 
 for i in range(args.reps):
     start_time = None
@@ -27,7 +82,7 @@ for i in range(args.reps):
     try:
         start_time = time.time()
 
-        client = SSHClient()
+        client = paramiko.SSHClient()
         client.load_system_host_keys()
 
         client.connect(args.host, SSH_PORT, args.username, args.password,
@@ -48,12 +103,15 @@ for i in range(args.reps):
             pysecube=pysecube
         )
 
-        _, stdout, _ = client.exec_command(args.command)
+        client.exec_command(args.command)
         end_time = time.time()
 
         client.close()
         pysecube.destroy()
     except Exception as e:
+        print(e)
         pass
 
+
+    save_and_clear_trace(i)
     print(f"{start_time},{end_time},{end_time - start_time}")

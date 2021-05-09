@@ -42,7 +42,7 @@ for i in range(args.reps):
             }
         )
 
-        _, stdout, _ = client.exec_command(args.command)
+        client.exec_command(args.command)
         end_time = time.time()
 
         client.close()
