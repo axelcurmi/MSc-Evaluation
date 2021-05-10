@@ -64,7 +64,7 @@ def add_event(when, what, scope, watch, func_args, func_kwargs):
 # The "none" cipher is provided for debugging and SHOULD NOT be used
 # except for that purpose.
 @aspectlib.Aspect
-def paramiko_transport_send_kex_init(*args, **kwargs):
+def _send_kex_init_aspect(*args, **kwargs):
     add_event("BEFORE", "_send_kex_init", "paramiko.Transport", {
         "preferred_ciphers": args[0].preferred_ciphers
     }, args[1:], kwargs)
@@ -74,8 +74,81 @@ def paramiko_transport_send_kex_init(*args, **kwargs):
         raise
     finally:
         pass
-aspectlib.weave(paramiko.Transport._send_kex_init,
-                paramiko_transport_send_kex_init)
+aspectlib.weave(paramiko.Transport._send_kex_init, _send_kex_init_aspect)
+
+# The MAC should be verified for each SSH packet received, where available.
+@aspectlib.Aspect
+def read_message_aspect(*args, **kwargs):
+    add_event("BEFORE", "read_message", "paramiko.Packetizer", {
+        "mac_engine_set": args[0]._Packetizer__mac_size_in > 0
+    }, args[1:], kwargs)
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.Packetizer.read_message, read_message_aspect)
+
+@aspectlib.Aspect
+def constant_time_bytes_eq_aspect(*args, **kwargs):
+    add_event("BEFORE", "constant_time_bytes_eq", "paramiko.util", {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.util.constant_time_bytes_eq,
+                constant_time_bytes_eq_aspect)
+
+# The host key of the target host should be loaded into the SSHClient object,
+# otherwise the connection is not secure. (from Paramiko README, but the
+# statement is supported from RFC4251)
+@aspectlib.Aspect
+def connect_aspect(*args, **kwargs):
+    add_event("BEFORE", "connect", "paramiko.SSHClient", {
+        "host_in_system_host_keys": \
+            args[0]._system_host_keys.get(args[1]) is not None,
+        "host_in_host_keys": args[0]._host_keys.get(args[1]) is not None,
+    }, [], {})
+    try:
+        yield
+    except Exception as e:
+        add_event(type(e).__name__, "connect", "paramiko.SSHClient", {}, [], {})
+        raise
+    finally:
+        add_event("AFTER", "connect", "paramiko.SSHClient", {}, [], {})
+aspectlib.weave(paramiko.SSHClient.connect, connect_aspect)
+
+# When KEXDH_REPLY is received from the server, the client MUST verify K_S
+# (public host key) with the signature of H to verify that the client is really
+# talking to the correct server
+@aspectlib.Aspect
+def _parse_kexecdh_reply_aspect(*args, **kwargs):
+    add_event("BEFORE", "_parse_kexdh_reply", "paramiko.kex_group14.KexGroup14",
+              {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        add_event("AFTER", "_parse_kexdh_reply",
+                  "paramiko.kex_group14.KexGroup14", {}, [], {})
+aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
+                _parse_kexecdh_reply_aspect)
+
+@aspectlib.Aspect
+def verify_ssh_sig_aspect(*args, **kwargs):
+    add_event("BEFORE", "verify_ssh_sig_aspect", "paramiko.ECDSAKey",
+              {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.ECDSAKey.verify_ssh_sig, verify_ssh_sig_aspect)
 
 # CLI argument parsing
 parser = argparse.ArgumentParser(
