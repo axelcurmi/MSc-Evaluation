@@ -1,1 +1,5 @@
 __pycache__
+event-replayer/.project
+event-replayer/.classpath
+event-replayer/.settings/*
+event-replayer/target/*
