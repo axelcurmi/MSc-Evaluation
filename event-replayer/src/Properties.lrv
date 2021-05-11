@@ -1,0 +1,44 @@
+IMPORTS
+{
+	import java.util.ArrayList;
+	import com.axelcurmi.eventreplayer.Event;
+}
+
+GLOBAL
+{
+	EVENTS
+		{
+%%			before_connect(Event e) = { Event e1.replay() }
+%%				filter {
+%%					e1.getWhen().equals("BEFORE") &&
+%%					e1.getWhat().equals("connect")
+%%				} where { e = e1; }
+%%			after_connect(Event e) = { Event e1.replay() }
+%%				filter {
+%%					e1.getWhen().equals("AFTER") &&
+%%					e1.getWhat().equals("connect")
+%%				} where { e = e1; }
+			before_send_kex_init(Event e, ArrayList<String> preferredCiphers) = { Event e1.replay() }
+				filter {
+					e1.getWhen().equals("BEFORE") &&
+					e1.getWhat().equals("_send_kex_init")
+				} where {
+					preferredCiphers = (ArrayList<String>)e1.getWatch().get("preferred_ciphers");
+					e = e1;
+				}
+		}
+
+		PROPERTY noneCipherProperty
+		{
+			STATES
+			{
+				BAD { bad }
+				STARTING { good }
+			}
+			
+			TRANSITIONS
+			{
+				good -> bad [ before_send_kex_init \ preferredCiphers.contains("none") ]
+			}
+		}
+}

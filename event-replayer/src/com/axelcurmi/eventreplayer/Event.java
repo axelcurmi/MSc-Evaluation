@@ -59,6 +59,7 @@ public class Event {
 	}
 	
 	public void replay() {
-		// Replays the event
+		// System.out.println(String.format("[%d] %s %s (%s)",
+		// 		timestamp, when, what, scope));
 	}
 }
