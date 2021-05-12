@@ -81,13 +81,15 @@ aspectlib.weave(paramiko.Transport._send_kex_init, _send_kex_init_aspect)
 def read_message_aspect(*args, **kwargs):
     add_event("BEFORE", "read_message", "paramiko.Packetizer", {
         "mac_engine_set": args[0]._Packetizer__mac_size_in > 0
-    }, args[1:], kwargs)
+    }, [], {})
     try:
         yield
     except Exception as e:
+        add_event(type(e).__name__, "read_message", "paramiko.Packetizer",
+            {}, [], {})
         raise
     finally:
-        pass
+        add_event("AFTER", "read_message", "paramiko.Packetizer", {}, [], {})
 aspectlib.weave(paramiko.Packetizer.read_message, read_message_aspect)
 
 @aspectlib.Aspect
@@ -115,7 +117,8 @@ def connect_aspect(*args, **kwargs):
     try:
         yield
     except Exception as e:
-        add_event(type(e).__name__, "connect", "paramiko.SSHClient", {}, [], {})
+        add_event(type(e).__name__, "connect", "paramiko.SSHClient",
+            {}, [], {})
         raise
     finally:
         add_event("AFTER", "connect", "paramiko.SSHClient", {}, [], {})
@@ -199,10 +202,13 @@ for i in range(args.reps):
         client.close()
         pysecube.destroy()
     except Exception as e:
-        print(e)
+        print(f"{type(e).__name__}: {e}")
         pass
 
-    timings.append((start_time, end_time, end_time - start_time))
+    if start_time is not None and end_time is not None:
+        timings.append((start_time, end_time, end_time - start_time))
 
     save_and_clear_trace(i)
-save_timings()
+
+if len(timings):
+    save_timings()

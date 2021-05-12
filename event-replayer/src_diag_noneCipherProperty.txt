@@ -1,0 +1,8 @@
+digraph _logic_noneCipherProperty {
+rankdir=LR;
+node [shape = circle]; good;
+node [shape = octagon]; bad;
+node [shape = point]; _s_s;
+_s_s -> good;
+good -> bad [ label = "(1) before_send_kex_init\\preferredCiphers . contains ( \" none \" ) "];
+}

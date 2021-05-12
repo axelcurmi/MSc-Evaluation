@@ -1,0 +1,11 @@
+digraph _logic_checkMACProperty {
+rankdir=LR;
+node [shape = circle]; shouldCheckMAC start;
+node [shape = octagon]; notCheckedMAC;
+node [shape = point]; _s_s;
+_s_s -> start;
+start -> shouldCheckMAC [ label = "(1) before_read_message\\isMACEngineSet "];
+shouldCheckMAC -> start [ label = "(1) before_constant_time_bytes_eq"];
+shouldCheckMAC -> start [ label = "(2) eof_read_message"];
+shouldCheckMAC -> notCheckedMAC [ label = "(3) after_read_message"];
+}

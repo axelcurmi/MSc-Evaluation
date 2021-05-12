@@ -7,38 +7,140 @@ IMPORTS
 GLOBAL
 {
 	EVENTS
+	{
+		before_connect(
+			Event e,
+			boolean hostInSystemHostKeys,
+			boolean hostInHostKeys
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("connect")
+			} where {
+				hostInSystemHostKeys = (boolean)e1.getWatch().get("host_in_system_host_keys");
+				hostInHostKeys = (boolean)e1.getWatch().get("host_in_host_keys");
+				e = e1;
+			}
+
+		sshException_connect(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("SSHException") &&
+				e1.getWhat().equals("connect")
+			} where {
+				e = e1;
+			}
+
+		after_connect(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("connect")
+			} where {
+				e = e1;
+			}
+
+		before_send_kex_init(
+			Event e, ArrayList<String> preferredCiphers
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("_send_kex_init")
+			} where {
+				preferredCiphers = (ArrayList<String>)e1.getWatch().get("preferred_ciphers");
+				e = e1;
+			}
+
+		before_read_message(
+			Event e, boolean isMACEngineSet
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				isMACEngineSet = (boolean)e1.getWatch().get("mac_engine_set");
+				e = e1;
+			}
+		
+		eof_read_message(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("EOFError") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				e = e1;
+			}
+		
+		after_read_message(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				e = e1;
+			}
+
+		before_constant_time_bytes_eq(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("constant_time_bytes_eq")
+			} where {
+				e = e1;
+			}
+	}
+
+	PROPERTY noneCipherProperty
+	{
+		STATES
 		{
-%%			before_connect(Event e) = { Event e1.replay() }
-%%				filter {
-%%					e1.getWhen().equals("BEFORE") &&
-%%					e1.getWhat().equals("connect")
-%%				} where { e = e1; }
-%%			after_connect(Event e) = { Event e1.replay() }
-%%				filter {
-%%					e1.getWhen().equals("AFTER") &&
-%%					e1.getWhat().equals("connect")
-%%				} where { e = e1; }
-			before_send_kex_init(Event e, ArrayList<String> preferredCiphers) = { Event e1.replay() }
-				filter {
-					e1.getWhen().equals("BEFORE") &&
-					e1.getWhat().equals("_send_kex_init")
-				} where {
-					preferredCiphers = (ArrayList<String>)e1.getWatch().get("preferred_ciphers");
-					e = e1;
-				}
+			BAD { bad }
+			STARTING { good }
+		}
+		
+		TRANSITIONS
+		{
+			good -> bad [ before_send_kex_init \ preferredCiphers.contains("none") ]
+		}
+	}
+	
+	PROPERTY newHostProperty
+	{
+		STATES
+		{
+			BAD { noExceptionThrown }
+			NORMAL { shouldThrowException }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> shouldThrowException [ before_connect \ !(hostInSystemHostKeys || hostInHostKeys) ]
+			shouldThrowException -> start [ sshException_connect ]
+			shouldThrowException -> noExceptionThrown [ after_connect ]
+		}
+	}
+	
+	PROPERTY checkMACProperty
+	{
+		STATES
+		{
+			BAD { notCheckedMAC }
+			NORMAL { shouldCheckMAC }
+			STARTING { start }
 		}
 
-		PROPERTY noneCipherProperty
+		TRANSITIONS
 		{
-			STATES
-			{
-				BAD { bad }
-				STARTING { good }
-			}
-			
-			TRANSITIONS
-			{
-				good -> bad [ before_send_kex_init \ preferredCiphers.contains("none") ]
-			}
+			start -> shouldCheckMAC [ before_read_message \ isMACEngineSet ]
+			shouldCheckMAC -> start [ before_constant_time_bytes_eq ]
+			shouldCheckMAC -> start [ eof_read_message ]
+			shouldCheckMAC -> notCheckedMAC [ after_read_message ]
 		}
+	}
 }
