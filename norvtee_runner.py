@@ -46,7 +46,6 @@ for i in range(args.reps):
         end_time = time.time()
 
         client.close()
-        pysecube.destroy()
     except Exception as e:
         pass
 

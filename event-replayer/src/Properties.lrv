@@ -105,12 +105,14 @@ GLOBAL
 			}
 			
 		after_parse_kexdh_reply(
-			Event e
+			Event e,
+			boolean xCleared
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("AFTER") &&
 				e1.getWhat().equals("_parse_kexdh_reply")
 			} where {
+				xCleared = (boolean)e1.getWatch().get("x_cleared");
 				e = e1;
 			}
 			
@@ -188,6 +190,20 @@ GLOBAL
 			start -> shouldVerifyHostKey [ before_parse_kexdh_reply ]
 			shouldVerifyHostKey -> start [ before_verify_ssh_sig_aspect ]
 			shouldVerifyHostKey -> notVerifiedHostKey [ after_parse_kexdh_reply ]
+		}
+	}
+	
+	PROPERTY clearedDHValuesProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> bad [ after_parse_kexdh_reply \ !xCleared ]
 		}
 	}
 }

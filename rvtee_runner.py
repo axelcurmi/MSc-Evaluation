@@ -61,13 +61,11 @@ def add_event(when, what, scope, watch, func_args, func_kwargs):
         }
     )
 
-# The "none" cipher is provided for debugging and SHOULD NOT be used
-# except for that purpose.
 @aspectlib.Aspect
 def _send_kex_init_aspect(*args, **kwargs):
     add_event("BEFORE", "_send_kex_init", "paramiko.Transport", {
         "preferred_ciphers": args[0].preferred_ciphers
-    }, args[1:], kwargs)
+    }, [], {})
     try:
         yield
     except Exception as e:
@@ -76,7 +74,6 @@ def _send_kex_init_aspect(*args, **kwargs):
         pass
 aspectlib.weave(paramiko.Transport._send_kex_init, _send_kex_init_aspect)
 
-# The MAC should be verified for each SSH packet received, where available.
 @aspectlib.Aspect
 def read_message_aspect(*args, **kwargs):
     add_event("BEFORE", "read_message", "paramiko.Packetizer", {
@@ -104,9 +101,6 @@ def constant_time_bytes_eq_aspect(*args, **kwargs):
 aspectlib.weave(paramiko.util.constant_time_bytes_eq,
                 constant_time_bytes_eq_aspect)
 
-# The host key of the target host should be loaded into the SSHClient object,
-# otherwise the connection is not secure. (from Paramiko README, but the
-# statement is supported from RFC4251)
 @aspectlib.Aspect
 def connect_aspect(*args, **kwargs):
     add_event("BEFORE", "connect", "paramiko.SSHClient", {
@@ -124,9 +118,6 @@ def connect_aspect(*args, **kwargs):
         add_event("AFTER", "connect", "paramiko.SSHClient", {}, [], {})
 aspectlib.weave(paramiko.SSHClient.connect, connect_aspect)
 
-# When KEXDH_REPLY is received from the server, the client MUST verify K_S
-# (public host key) with the signature of H to verify that the client is really
-# talking to the correct server
 @aspectlib.Aspect
 def _parse_kexecdh_reply_aspect(*args, **kwargs):
     add_event("BEFORE", "_parse_kexdh_reply", "paramiko.kex_group14.KexGroup14",
@@ -137,7 +128,9 @@ def _parse_kexecdh_reply_aspect(*args, **kwargs):
         raise
     finally:
         add_event("AFTER", "_parse_kexdh_reply",
-                  "paramiko.kex_group14.KexGroup14", {}, [], {})
+            "paramiko.kex_group14.KexGroup14", {
+                "x_cleared": args[0].x is None or args[0].x == 0
+            }, [], {})
 aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
                 _parse_kexecdh_reply_aspect)
 
@@ -202,7 +195,7 @@ for i in range(args.reps):
         client.close()
         pysecube.destroy()
     except Exception as e:
-        print(f"{type(e).__name__}: {e}")
+        # print(f"{type(e).__name__}: {e}")
         pass
 
     if start_time is not None and end_time is not None:
