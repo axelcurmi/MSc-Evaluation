@@ -1,0 +1,393 @@
+[
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "connect",
+        "scope": "paramiko.SSHClient",
+        "watch": {
+            "host_in_system_host_keys": true,
+            "host_in_host_keys": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "_send_kex_init",
+        "scope": "paramiko.Transport",
+        "watch": {
+            "preferred_ciphers": [
+                "aes128-ctr",
+                "aes192-ctr",
+                "aes256-ctr",
+                "aes128-cbc",
+                "aes192-cbc",
+                "aes256-cbc",
+                "blowfish-cbc",
+                "3des-cbc"
+            ]
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "_parse_kexdh_reply",
+        "scope": "paramiko.kex_group14.KexGroup14",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "verify_ssh_sig_aspect",
+        "scope": "paramiko.ECDSAKey",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "_parse_kexdh_reply",
+        "scope": "paramiko.kex_group14.KexGroup14",
+        "watch": {
+            "x_cleared": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "connect",
+        "scope": "paramiko.SSHClient",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "EOFError",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1620837599,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    }
+]
