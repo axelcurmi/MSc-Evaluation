@@ -1,0 +1,10 @@
+digraph _logic_verifyHostKeyProperty {
+rankdir=LR;
+node [shape = circle]; shouldVerifyHostKey start;
+node [shape = octagon]; notVerifiedHostKey;
+node [shape = point]; _s_s;
+_s_s -> start;
+shouldVerifyHostKey -> start [ label = "(1) before_verify_ssh_sig_aspect"];
+shouldVerifyHostKey -> notVerifiedHostKey [ label = "(2) after_parse_kexdh_reply"];
+start -> shouldVerifyHostKey [ label = "(1) before_parse_kexdh_reply"];
+}

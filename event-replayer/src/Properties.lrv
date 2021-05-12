@@ -93,6 +93,36 @@ GLOBAL
 			} where {
 				e = e1;
 			}
+			
+		before_parse_kexdh_reply(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("_parse_kexdh_reply")
+			} where {
+				e = e1;
+			}
+			
+		after_parse_kexdh_reply(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("_parse_kexdh_reply")
+			} where {
+				e = e1;
+			}
+			
+		before_verify_ssh_sig_aspect(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("verify_ssh_sig_aspect")
+			} where {
+				e = e1;
+			}
 	}
 
 	PROPERTY noneCipherProperty
@@ -141,6 +171,23 @@ GLOBAL
 			shouldCheckMAC -> start [ before_constant_time_bytes_eq ]
 			shouldCheckMAC -> start [ eof_read_message ]
 			shouldCheckMAC -> notCheckedMAC [ after_read_message ]
+		}
+	}
+	
+	PROPERTY verifyHostKeyProperty
+	{
+		STATES
+		{
+			BAD { notVerifiedHostKey }
+			NORMAL { shouldVerifyHostKey }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> shouldVerifyHostKey [ before_parse_kexdh_reply ]
+			shouldVerifyHostKey -> start [ before_verify_ssh_sig_aspect ]
+			shouldVerifyHostKey -> notVerifiedHostKey [ after_parse_kexdh_reply ]
 		}
 	}
 }
