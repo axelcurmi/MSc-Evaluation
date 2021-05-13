@@ -22,6 +22,7 @@ try:
     client = paramiko.SSHClient()
     client.load_system_host_keys()
 
+    print(f"Connecting to {args.host}:{SSH_PORT}")
     client.connect(args.host, SSH_PORT, args.username, args.password,
         disabled_algorithms={
             # Force KEX engine to use DH Group 14 with SHA256
@@ -39,7 +40,9 @@ try:
         },
         pysecube=pysecube
     )
+    print("Connected successfully")
 
+    print(f"Executing command: {args.command}")
     _, stdout, _ = client.exec_command(args.command)
     print(stdout.read().decode())
 

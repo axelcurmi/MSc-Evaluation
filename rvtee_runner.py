@@ -13,6 +13,10 @@ from paramiko.config import SSH_PORT
 
 from pysecube.wrapper import Wrapper
 
+# import logging
+# logging.basicConfig()
+# logging.getLogger("paramiko").setLevel(logging.DEBUG)
+
 PYSECUBE_PIN = b"test"
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
 OUT_DIR = path.join("out", "rvtee", TEST_TIME)
@@ -154,6 +158,7 @@ parser.add_argument("--username", "-u", type=str, required=True)
 parser.add_argument("--password", "-p", type=str, required=True)
 parser.add_argument("--command", "-c", type=str, required=True)
 parser.add_argument("--reps", "-r", type=int, required=True)
+parser.add_argument("--no-trace", default=False, action="store_true")
 args = parser.parse_args()
 
 print(f"Result(s) will be saved in {OUT_DIR}")
@@ -190,6 +195,10 @@ for i in range(args.reps):
         )
 
         client.exec_command(args.command)
+        # _, stdout, _ = client.exec_command(args.command)
+        # print(stdout.read().decode())
+        # stdout.close()
+
         end_time = time.time()
 
         client.close()
@@ -201,7 +210,8 @@ for i in range(args.reps):
     if start_time is not None and end_time is not None:
         timings.append((start_time, end_time, end_time - start_time))
 
-    save_and_clear_trace(i)
+    if not args.no_trace:
+        save_and_clear_trace(i)
 
-if len(timings):
+if len(timings) > 0:
     save_timings()
