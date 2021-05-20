@@ -18,9 +18,9 @@ from paramiko.common import (MSG_NEWKEYS,
 
 from pysecube.wrapper import Wrapper
 
-import logging
-logging.basicConfig()
-logging.getLogger("paramiko").setLevel(logging.DEBUG)
+# import logging
+# logging.basicConfig()
+# logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
 PYSECUBE_PIN = b"test"
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -163,6 +163,8 @@ def _check_banner_aspect(*args, **kwargs):
     try:
         yield
     except Exception as e:
+        add_event(type(e).__name__, "_check_banner", "paramiko.Transport",
+            {}, [], {})
         raise
     finally:
         add_event("AFTER", "_check_banner", "paramiko.Transport", {

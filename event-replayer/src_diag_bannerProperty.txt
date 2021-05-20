@@ -1,0 +1,9 @@
+digraph _logic_bannerProperty {
+rankdir=LR;
+node [shape = circle]; exceptionThrown start;
+node [shape = octagon]; noExceptionThrown;
+node [shape = point]; _s_s;
+_s_s -> start;
+start -> exceptionThrown [ label = "(1) sshexception_check_banner"];
+start -> noExceptionThrown [ label = "(2) after_check_banner\\! ( banner . startsWith ( \" 2.0 \" ) || banner . startsWith ( \" 1.99 \" ) ) \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+}
