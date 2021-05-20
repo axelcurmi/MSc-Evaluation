@@ -1,6 +1,6 @@
 [
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "connect",
         "scope": "paramiko.SSHClient",
@@ -12,10 +12,21 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_check_banner",
+        "scope": "paramiko.Transport",
+        "watch": {
+            "banner": "SSH-2.0-OpenSSH_8.3p1 Ubuntu-1ubuntu0.1"
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "_send_kex_init",
-        "scope": "paramiko.Transport",
+        "scope": "paramiko.transport.Transport",
         "watch": {
             "preferred_ciphers": [
                 "aes128-ctr",
@@ -32,7 +43,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 632,
+            "padding_length": 5
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -43,7 +66,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -52,7 +75,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 272,
+            "padding_length": 6
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -63,7 +98,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -72,16 +107,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
-        "when": "BEFORE",
-        "what": "_parse_kexdh_reply",
-        "scope": "paramiko.kex_group14.KexGroup14",
-        "watch": {},
-        "func_args": [],
-        "func_kwargs": {}
-    },
-    {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "verify_ssh_sig_aspect",
         "scope": "paramiko.ECDSAKey",
@@ -90,18 +116,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
-        "what": "_parse_kexdh_reply",
-        "scope": "paramiko.kex_group14.KexGroup14",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
         "watch": {
-            "x_cleared": false
+            "packet_length": 16,
+            "padding_length": 10
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -112,7 +139,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -121,7 +148,27 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "_parse_newkeys",
+        "scope": "paramiko.Transport",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_parse_newkeys",
+        "scope": "paramiko.Transport",
+        "watch": {
+            "bytes_equal": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -132,7 +179,28 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "_request_auth",
+        "scope": "paramiko.AuthHandler",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 32,
+            "padding_length": 10
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -141,7 +209,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -150,7 +218,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 624,
+            "padding_length": 9
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -161,7 +241,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -170,7 +250,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -179,7 +259,16 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "_parse_userauth_failure",
+        "scope": "paramiko.AuthHandler",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -190,7 +279,28 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "_request_auth",
+        "scope": "paramiko.AuthHandler",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 32,
+            "padding_length": 10
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -199,7 +309,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -208,7 +318,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 64,
+            "padding_length": 7
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -219,7 +341,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -228,7 +350,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -237,7 +359,16 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "_parse_userauth_success",
+        "scope": "paramiko.AuthHandler",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -248,7 +379,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "connect",
         "scope": "paramiko.SSHClient",
@@ -257,7 +388,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 48,
+            "padding_length": 19
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -266,7 +409,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -275,7 +418,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -286,7 +429,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -295,7 +438,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -304,7 +447,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -315,7 +458,19 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 48,
+            "padding_length": 17
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -324,7 +479,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -333,7 +488,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -344,7 +499,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -353,7 +508,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -362,7 +517,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -373,7 +528,147 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "constant_time_bytes_eq",
+        "scope": "paramiko.util",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 16,
+            "padding_length": 6
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "AFTER",
+        "what": "_build_packet",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "packet_length": 16,
+            "padding_length": 6
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
+        "when": "BEFORE",
+        "what": "read_message",
+        "scope": "paramiko.Packetizer",
+        "watch": {
+            "mac_engine_set": true
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "timestamp": 1621532652,
         "when": "EOFError",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -382,7 +677,7 @@
         "func_kwargs": {}
     },
     {
-        "timestamp": 1620837599,
+        "timestamp": 1621532652,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",

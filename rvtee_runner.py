@@ -1,6 +1,8 @@
-import argparse
 import csv
+import ctypes
 import json
+import sys
+import threading
 import time
 
 from datetime import datetime
@@ -10,6 +12,9 @@ import aspectlib
 import paramiko
 
 from paramiko.config import SSH_PORT
+from paramiko.common import (MSG_NEWKEYS,
+                             MSG_USERAUTH_SUCCESS,
+                             MSG_USERAUTH_FAILURE)
 
 from pysecube.wrapper import Wrapper
 
@@ -67,7 +72,7 @@ def add_event(when, what, scope, watch, func_args, func_kwargs):
 
 @aspectlib.Aspect
 def _send_kex_init_aspect(*args, **kwargs):
-    add_event("BEFORE", "_send_kex_init", "paramiko.Transport", {
+    add_event("BEFORE", "_send_kex_init", "paramiko.transport.Transport", {
         "preferred_ciphers": args[0].preferred_ciphers
     }, [], {})
     try:
@@ -76,7 +81,7 @@ def _send_kex_init_aspect(*args, **kwargs):
         raise
     finally:
         pass
-aspectlib.weave(paramiko.Transport._send_kex_init, _send_kex_init_aspect)
+aspectlib.weave(paramiko.transport.Transport._send_kex_init, _send_kex_init_aspect)
 
 @aspectlib.Aspect
 def read_message_aspect(*args, **kwargs):
@@ -123,20 +128,23 @@ def connect_aspect(*args, **kwargs):
 aspectlib.weave(paramiko.SSHClient.connect, connect_aspect)
 
 @aspectlib.Aspect
-def _parse_kexecdh_reply_aspect(*args, **kwargs):
-    add_event("BEFORE", "_parse_kexdh_reply", "paramiko.kex_group14.KexGroup14",
-              {}, [], {})
+def _parse_newkeys_aspect(*args, **kwargs):
+    size = sys.getsizeof(args[0].kex_engine.x)
+    address = id(args[0].kex_engine.x)
+
+    bytes_before = (size * ctypes.c_uint8).from_address(address)
+    add_event("BEFORE", "_parse_newkeys", "paramiko.Transport", {}, [], {})
     try:
         yield
     except Exception as e:
         raise
     finally:
-        add_event("AFTER", "_parse_kexdh_reply",
-            "paramiko.kex_group14.KexGroup14", {
-                "x_cleared": args[0].x is None or args[0].x == 0
-            }, [], {})
-aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
-                _parse_kexecdh_reply_aspect)
+        bytes_after = (size * ctypes.c_uint8).from_address(address)
+        add_event("AFTER", "_parse_newkeys", "paramiko.Transport", {
+            "bytes_equal": all(x == y for x, y in zip(bytes_before, bytes_after))
+        }, [], {})
+aspectlib.weave(paramiko.Transport._parse_newkeys,
+                _parse_newkeys_aspect)
 
 @aspectlib.Aspect
 def verify_ssh_sig_aspect(*args, **kwargs):
@@ -150,20 +158,92 @@ def verify_ssh_sig_aspect(*args, **kwargs):
         pass
 aspectlib.weave(paramiko.ECDSAKey.verify_ssh_sig, verify_ssh_sig_aspect)
 
-# CLI argument parsing
-parser = argparse.ArgumentParser(
-    description="PySEcube test driver")
-parser.add_argument("--host", "-H", type=str, required=True)
-parser.add_argument("--username", "-u", type=str, required=True)
-parser.add_argument("--password", "-p", type=str, required=True)
-parser.add_argument("--command", "-c", type=str, required=True)
-parser.add_argument("--reps", "-r", type=int, required=True)
-parser.add_argument("--no-trace", default=False, action="store_true")
-args = parser.parse_args()
+@aspectlib.Aspect
+def _check_banner_aspect(*args, **kwargs):
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        add_event("AFTER", "_check_banner", "paramiko.Transport", {
+            "banner": args[0].remote_version
+        }, [], {})
+aspectlib.weave(paramiko.Transport._check_banner, _check_banner_aspect)
+
+@aspectlib.Aspect
+def _build_packet_aspect(*args, **kwargs):
+    packet_length = None
+    padding_length = None
+    try:
+        packet = yield
+        packet_length = len(packet)
+        padding_length = packet[4]
+    except Exception as e:
+        raise
+    finally:
+        add_event("AFTER", "_build_packet", "paramiko.Packetizer", {
+            "packet_length": packet_length,
+            "padding_length": padding_length
+        }, [], {})
+aspectlib.weave(paramiko.Packetizer._build_packet, _build_packet_aspect)
+
+@aspectlib.Aspect
+def _request_auth_aspect(*args, **kwargs):
+    add_event("BEFORE", "_request_auth", "paramiko.AuthHandler", {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.AuthHandler._request_auth,
+                _request_auth_aspect)
+
+@aspectlib.Aspect
+def _parse_userauth_success_aspect(*args, **kwargs):
+    add_event("BEFORE", "_parse_userauth_success", "paramiko.AuthHandler",
+              {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.AuthHandler._parse_userauth_success,
+                _parse_userauth_success_aspect)
+
+@aspectlib.Aspect
+def _parse_userauth_failure_aspect(*args, **kwargs):
+    add_event("BEFORE", "_parse_userauth_failure", "paramiko.AuthHandler",
+              {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.AuthHandler._parse_userauth_failure,
+                _parse_userauth_failure_aspect)
+
+# Patching
+paramiko.Transport._handler_table[MSG_NEWKEYS] = \
+    paramiko.Transport._parse_newkeys
+paramiko.AuthHandler._client_handler_table[MSG_USERAUTH_SUCCESS] = \
+    paramiko.AuthHandler._parse_userauth_success
+paramiko.AuthHandler._client_handler_table[MSG_USERAUTH_FAILURE] = \
+    paramiko.AuthHandler._parse_userauth_failure
+
+# Variables
+HOST = "192.168.37.136"
+USERNAME = "user"
+PASSWORD = "password"
+COMMAND = "uname -a"
+NO_TRACE = False
+N = 1
 
 print(f"Result(s) will be saved in {OUT_DIR}")
 
-for i in range(args.reps):
+for i in range(N):
     start_time = None
     end_time = None
 
@@ -176,7 +256,8 @@ for i in range(args.reps):
         client = paramiko.SSHClient()
         client.load_system_host_keys()
 
-        client.connect(args.host, SSH_PORT, args.username, args.password,
+        print(f"Connecting with {HOST}:{SSH_PORT}")
+        client.connect(HOST, SSH_PORT, USERNAME, PASSWORD,
             disabled_algorithms={
                 # Force KEX engine to use DH Group 14 with SHA256
                 "kex": [
@@ -193,13 +274,20 @@ for i in range(args.reps):
             },
             pysecube=pysecube
         )
+        print("Connected successfully")
 
-        client.exec_command(args.command)
-        # _, stdout, _ = client.exec_command(args.command)
-        # print(stdout.read().decode())
-        # stdout.close()
-
+        channel = client.get_transport().open_channel("session")
+        channel.exec_command(COMMAND)
         end_time = time.time()
+        stdout = channel.makefile("r", -1)
+
+        # Wait for an EOF to be received
+        while not channel.eof_received:
+            time.sleep(0.1)
+        
+        channel.close()
+        print(stdout.read().decode())
+        stdout.close()
 
         client.close()
         pysecube.destroy()
@@ -210,8 +298,9 @@ for i in range(args.reps):
     if start_time is not None and end_time is not None:
         timings.append((start_time, end_time, end_time - start_time))
 
-    if not args.no_trace:
-        save_and_clear_trace(i)
+    if NO_TRACE:
+        continue
+    save_and_clear_trace(i)
 
 if len(timings) > 0:
     save_timings()

@@ -1,4 +1,6 @@
 __pycache__
+.vscode
+
 event-replayer/.project
 event-replayer/.classpath
 event-replayer/.settings/*
