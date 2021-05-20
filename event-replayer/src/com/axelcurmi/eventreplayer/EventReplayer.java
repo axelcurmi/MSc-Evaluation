@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 
 public class EventReplayer {
 	public static void main(String[] args) {
-		String tracePath = "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\out\\rvtee\\20210512183959\\0.json";
-
+		String tracePath = "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\out\\rvtee\\sample\\0.json";
+		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(tracePath));
 			String jsonString = br.lines().collect(Collectors.joining());
@@ -17,8 +17,8 @@ public class EventReplayer {
 			Gson gson = new Gson();
 			Event[] events = gson.fromJson(jsonString, Event[].class);
 			
-			for (Event event : events) {
-				event.replay();
+			for (int i = 0; i < events.length; i++) {
+				events[i].replay();
 			}
 
 			br.close();

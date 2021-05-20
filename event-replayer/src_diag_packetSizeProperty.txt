@@ -1,0 +1,10 @@
+digraph _logic_packetSizeProperty {
+rankdir=LR;
+node [shape = circle]; encryptedMessages unencryptedMessages;
+node [shape = octagon]; bad;
+node [shape = point]; _s_s;
+_s_s -> unencryptedMessages;
+encryptedMessages -> bad [ label = "(1) after_build_packet\\packetLength % AES128BlockSize != 0 \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+unencryptedMessages -> encryptedMessages [ label = "(1) after_parse_newkeys"];
+unencryptedMessages -> bad [ label = "(2) after_build_packet\\packetLength % minimumPacketSize != 0 \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+}

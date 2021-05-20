@@ -18,9 +18,9 @@ from paramiko.common import (MSG_NEWKEYS,
 
 from pysecube.wrapper import Wrapper
 
-# import logging
-# logging.basicConfig()
-# logging.getLogger("paramiko").setLevel(logging.DEBUG)
+import logging
+logging.basicConfig()
+logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
 PYSECUBE_PIN = b"test"
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -60,6 +60,7 @@ def add_event(when, what, scope, watch, func_args, func_kwargs):
 
     trace.append(
         {
+            "id": len(trace),
             "timestamp": int(time.time()),
             "when": when,
             "what": what,

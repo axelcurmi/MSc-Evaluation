@@ -4,5 +4,5 @@ node [shape = circle]; start;
 node [shape = octagon]; bad;
 node [shape = point]; _s_s;
 _s_s -> start;
-start -> bad [ label = "(1) after_parse_kexdh_reply\\! xCleared "];
+start -> bad [ label = "(1) after_parse_newkeys\\bytesEqual \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
 }

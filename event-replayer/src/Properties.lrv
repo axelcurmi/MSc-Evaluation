@@ -6,6 +6,12 @@ IMPORTS
 
 GLOBAL
 {
+	VARIABLES
+	{
+		int minimumPacketSize = 8;
+		int AES128BlockSize = 16;
+	}
+
 	EVENTS
 	{
 		before_connect(
@@ -103,16 +109,26 @@ GLOBAL
 			} where {
 				e = e1;
 			}
-			
+		
 		after_parse_kexdh_reply(
-			Event e,
-			boolean xCleared
+			Event e
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("AFTER") &&
 				e1.getWhat().equals("_parse_kexdh_reply")
 			} where {
-				xCleared = (boolean)e1.getWatch().get("x_cleared");
+				e = e1;
+			}
+		
+		after_parse_newkeys(
+			Event e,
+			boolean bytesEqual
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("_parse_newkeys")
+			} where {
+				bytesEqual = (boolean)e1.getWatch().get("bytes_equal");
 				e = e1;
 			}
 			
@@ -123,6 +139,20 @@ GLOBAL
 				e1.getWhen().equals("BEFORE") &&
 				e1.getWhat().equals("verify_ssh_sig_aspect")
 			} where {
+				e = e1;
+			}
+			
+		after_build_packet(
+			Event e,
+			double packetLength,
+			double paddingLength
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("_build_packet")
+			} where {
+				packetLength = (double)e1.getWatch().get("packet_length");
+				paddingLength = (double)e1.getWatch().get("padding_length");
 				e = e1;
 			}
 	}
@@ -184,7 +214,7 @@ GLOBAL
 			NORMAL { shouldVerifyHostKey }
 			STARTING { start }
 		}
-		
+
 		TRANSITIONS
 		{
 			start -> shouldVerifyHostKey [ before_parse_kexdh_reply ]
@@ -192,7 +222,7 @@ GLOBAL
 			shouldVerifyHostKey -> notVerifiedHostKey [ after_parse_kexdh_reply ]
 		}
 	}
-	
+
 	PROPERTY clearedDHValuesProperty
 	{
 		STATES
@@ -203,7 +233,38 @@ GLOBAL
 		
 		TRANSITIONS
 		{
-			start -> bad [ after_parse_kexdh_reply \ !xCleared ]
+			start -> bad [ after_parse_newkeys \ bytesEqual \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	PROPERTY paddingSizeProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> bad [ after_build_packet \ paddingLength < 4 ]
+		}
+	}
+	
+	PROPERTY packetSizeProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			NORMAL { encryptedMessages }
+			STARTING { unencryptedMessages }
+		}
+		
+		TRANSITIONS
+		{
+			unencryptedMessages -> encryptedMessages [ after_parse_newkeys ]
+			unencryptedMessages -> bad [ after_build_packet \ packetLength % minimumPacketSize != 0 \ System.out.println("--> " + e.toString()); ]
+			encryptedMessages -> bad [ after_build_packet \ packetLength % AES128BlockSize != 0 \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 }

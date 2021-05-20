@@ -6,6 +6,7 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 public class Event {
+	private long id;
 	private long timestamp;
 	private String when;
 	private String what;
@@ -30,6 +31,14 @@ public class Event {
 		this.functionKwargs = functionKwargs;
 	}
 
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -59,7 +68,12 @@ public class Event {
 	}
 	
 	public void replay() {
-		// System.out.println(String.format("[%d] %s %s (%s)",
-		// 		timestamp, when, what, scope));
+		System.out.println(String.format("[%d] %s %s (%s)",
+				timestamp, when, what, scope));
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%d] %s %s", id, when, what);
 	}
 }
