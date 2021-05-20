@@ -133,7 +133,6 @@ def _parse_newkeys_aspect(*args, **kwargs):
     address = id(args[0].kex_engine.x)
 
     bytes_before = (size * ctypes.c_uint8).from_address(address)
-    add_event("BEFORE", "_parse_newkeys", "paramiko.Transport", {}, [], {})
     try:
         yield
     except Exception as e:
