@@ -224,6 +224,20 @@ def _parse_userauth_failure_aspect(*args, **kwargs):
 aspectlib.weave(paramiko.AuthHandler._parse_userauth_failure,
                 _parse_userauth_failure_aspect)
 
+@aspectlib.Aspect
+def _parse_kexdh_reply_aspect(*args, **kwargs):
+    add_event("BEFORE", "_parse_kexdh_reply", "paramiko.kex_group14.KexGroup14",
+              {}, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        add_event("AFTER", "_parse_kexdh_reply",
+            "paramiko.kex_group14.KexGroup14", {}, [], {})
+aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
+                _parse_kexdh_reply_aspect)
+
 # Patching
 paramiko.Transport._handler_table[MSG_NEWKEYS] = \
     paramiko.Transport._parse_newkeys
