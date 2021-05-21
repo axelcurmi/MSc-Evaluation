@@ -1,0 +1,10 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+ChallengeResponseAuthentication no
+UsePAM yes
+PrintMotd no
+AcceptEnv LANG LC_*
+
+Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+MACs hmac-sha2-256
+KexAlgorithms diffie-hellman-group14-sha256
