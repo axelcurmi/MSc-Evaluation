@@ -13,8 +13,6 @@ import paramiko
 
 from paramiko.config import SSH_PORT
 from paramiko.common import (MSG_NEWKEYS,
-                             MSG_USERAUTH_SUCCESS,
-                             MSG_USERAUTH_FAILURE,
                              asbytes)
 from paramiko.py3compat import byte_ord
 
@@ -91,14 +89,17 @@ def read_message_aspect(*args, **kwargs):
     add_event("BEFORE", "read_message", "paramiko.Packetizer", {
         "mac_engine_set": args[0]._Packetizer__mac_size_in > 0
     }, [], {})
+    command_id = None
     try:
-        yield
+        command_id, _ = yield
     except Exception as e:
         add_event(type(e).__name__, "read_message", "paramiko.Packetizer",
             {}, [], {})
         raise
     finally:
-        add_event("AFTER", "read_message", "paramiko.Packetizer", {}, [], {})
+        add_event("AFTER", "read_message", "paramiko.Packetizer", {
+            "command_id": command_id
+        }, [], {})
 aspectlib.weave(paramiko.Packetizer.read_message, read_message_aspect)
 
 @aspectlib.Aspect
@@ -192,44 +193,6 @@ def _build_packet_aspect(*args, **kwargs):
 aspectlib.weave(paramiko.Packetizer._build_packet, _build_packet_aspect)
 
 @aspectlib.Aspect
-def _request_auth_aspect(*args, **kwargs):
-    add_event("BEFORE", "_request_auth", "paramiko.AuthHandler", {}, [], {})
-    try:
-        yield
-    except Exception as e:
-        raise
-    finally:
-        pass
-aspectlib.weave(paramiko.AuthHandler._request_auth,
-                _request_auth_aspect)
-
-@aspectlib.Aspect
-def _parse_userauth_success_aspect(*args, **kwargs):
-    add_event("BEFORE", "_parse_userauth_success", "paramiko.AuthHandler",
-              {}, [], {})
-    try:
-        yield
-    except Exception as e:
-        raise
-    finally:
-        pass
-aspectlib.weave(paramiko.AuthHandler._parse_userauth_success,
-                _parse_userauth_success_aspect)
-
-@aspectlib.Aspect
-def _parse_userauth_failure_aspect(*args, **kwargs):
-    add_event("BEFORE", "_parse_userauth_failure", "paramiko.AuthHandler",
-              {}, [], {})
-    try:
-        yield
-    except Exception as e:
-        raise
-    finally:
-        pass
-aspectlib.weave(paramiko.AuthHandler._parse_userauth_failure,
-                _parse_userauth_failure_aspect)
-
-@aspectlib.Aspect
 def _parse_kexdh_reply_aspect(*args, **kwargs):
     add_event("BEFORE", "_parse_kexdh_reply", "paramiko.kex_group14.KexGroup14",
               {}, [], {})
@@ -260,10 +223,6 @@ aspectlib.weave(paramiko.Packetizer.send_message, send_message_aspect)
 # Patching
 paramiko.Transport._handler_table[MSG_NEWKEYS] = \
     paramiko.Transport._parse_newkeys
-paramiko.AuthHandler._client_handler_table[MSG_USERAUTH_SUCCESS] = \
-    paramiko.AuthHandler._parse_userauth_success
-paramiko.AuthHandler._client_handler_table[MSG_USERAUTH_FAILURE] = \
-    paramiko.AuthHandler._parse_userauth_failure
 
 # Variables
 HOST = "192.168.37.136"

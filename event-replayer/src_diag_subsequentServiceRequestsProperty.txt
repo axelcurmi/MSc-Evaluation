@@ -1,0 +1,10 @@
+digraph _logic_subsequentServiceRequestsProperty {
+rankdir=LR;
+node [shape = circle]; cannotSendData canSendData;
+node [shape = octagon]; illegalDataSent;
+node [shape = point]; _s_s;
+_s_s -> canSendData;
+canSendData -> cannotSendData [ label = "(1) before_send_message\\commandId == 5 "];
+cannotSendData -> canSendData [ label = "(1) after_read_message\\commandId == 6 "];
+cannotSendData -> illegalDataSent [ label = "(2) before_send_message"];
+}

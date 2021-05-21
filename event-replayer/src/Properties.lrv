@@ -81,37 +81,6 @@ GLOBAL
 				e = e1;
 			}
 
-		before_read_message(
-			Event e, boolean isMACEngineSet
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("BEFORE") &&
-				e1.getWhat().equals("read_message")
-			} where {
-				isMACEngineSet = (boolean)e1.getWatch().get("mac_engine_set");
-				e = e1;
-			}
-		
-		eof_read_message(
-			Event e
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("EOFError") &&
-				e1.getWhat().equals("read_message")
-			} where {
-				e = e1;
-			}
-		
-		after_read_message(
-			Event e
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("AFTER") &&
-				e1.getWhat().equals("read_message")
-			} where {
-				e = e1;
-			}
-
 		before_constant_time_bytes_eq(
 			Event e
 		) = { Event e1.replay() }
@@ -199,7 +168,40 @@ GLOBAL
 				banner = ((String)e1.getWatch().get("banner")).replace("SSH-", "");
 				e = e1;
 			}
-			
+
+				before_read_message(
+			Event e, boolean isMACEngineSet
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				isMACEngineSet = (boolean)e1.getWatch().get("mac_engine_set");
+				e = e1;
+			}
+		
+		eof_read_message(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("EOFError") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				e = e1;
+			}
+		
+		after_read_message(
+			Event e,
+			int commandId
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("read_message")
+			} where {
+				commandId = e1.getWatch().get("command_id") == null ? -1 : ((Double)e1.getWatch().get("command_id")).intValue();
+				e = e1;
+			}
+
 		before_send_message(
 			Event e,
 			int commandId
@@ -209,36 +211,6 @@ GLOBAL
 				e1.getWhat().equals("send_message")
 			} where {
 				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
-				e = e1;
-			}
-
-		before_request_auth(
-			Event e
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("BEFORE") &&
-				e1.getWhat().equals("_request_auth")
-			} where {
-				e = e1;
-			}
-
-		before_parse_userauth_success(
-			Event e
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("BEFORE") &&
-				e1.getWhat().equals("_parse_userauth_success")
-			} where {
-				e = e1;
-			}
-
-		before_parse_userauth_failure(
-			Event e
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("BEFORE") &&
-				e1.getWhat().equals("_parse_userauth_failure")
-			} where {
 				e = e1;
 			}
 	}
@@ -393,16 +365,33 @@ GLOBAL
 		STATES
 		{
 			BAD { illegalRequestSent }
-			NORMAL { cannotSentRequest }
+			NORMAL { cannotSendRequest }
 			STARTING { canSendRequest }
 		}
 		
 		TRANSITIONS
 		{
-			canSendRequest -> cannotSentRequest [ before_request_auth ]
-			cannotSentRequest -> canSendRequest [ before_parse_userauth_success ]
-			cannotSentRequest -> canSendRequest [ before_parse_userauth_failure ]
-			cannotSentRequest -> illegalRequestSent [ before_request_auth ]
+			canSendRequest -> cannotSendRequest [ before_send_message \ commandId == 50 ] %% SSH_MSG_USERAUTH_REQUEST
+			cannotSendRequest -> canSendRequest [ after_read_message \ commandId == 51 ] %% SSH_MSG_USERAUTH_FAILURE
+			cannotSendRequest -> canSendRequest [ after_read_message \ commandId == 52 ] %% SSH_MSG_USERAUTH_SUCCESS
+			cannotSendRequest -> illegalRequestSent [ before_send_message \ commandId == 50 ] %% SSH_MSG_USERAUTH_REQUEST
+		}
+	}
+	
+	PROPERTY subsequentServiceRequestsProperty
+	{
+		STATES
+		{
+			BAD { illegalDataSent }
+			NORMAL { cannotSendData }
+			STARTING { canSendData }
+		}
+		
+		TRANSITIONS
+		{
+			canSendData -> cannotSendData [ before_send_message \ commandId == 5 ] %% SSH_MSG_SERVICE_REQUEST
+			cannotSendData -> canSendData [ after_read_message \ commandId == 6 ] %% SSH_MSG_SERVICE_ACCEPT
+			cannotSendData -> illegalDataSent [ before_send_message ]
 		}
 	}
 }

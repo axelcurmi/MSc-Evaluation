@@ -1,11 +1,11 @@
 digraph _logic_subsequentAuthRequestsProperty {
 rankdir=LR;
-node [shape = circle]; cannotSentRequest canSendRequest;
+node [shape = circle]; cannotSendRequest canSendRequest;
 node [shape = octagon]; illegalRequestSent;
 node [shape = point]; _s_s;
 _s_s -> canSendRequest;
-canSendRequest -> cannotSentRequest [ label = "(1) before_request_auth"];
-cannotSentRequest -> canSendRequest [ label = "(1) before_parse_userauth_success"];
-cannotSentRequest -> canSendRequest [ label = "(2) before_parse_userauth_failure"];
-cannotSentRequest -> illegalRequestSent [ label = "(3) before_request_auth"];
+canSendRequest -> cannotSendRequest [ label = "(1) before_send_message\\commandId == 50 "];
+cannotSendRequest -> canSendRequest [ label = "(1) after_read_message\\commandId == 51 "];
+cannotSendRequest -> canSendRequest [ label = "(2) after_read_message\\commandId == 52 "];
+cannotSendRequest -> illegalRequestSent [ label = "(3) before_send_message\\commandId == 50 "];
 }
