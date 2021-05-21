@@ -1,0 +1,11 @@
+digraph _logic_subsequentAuthRequestsProperty {
+rankdir=LR;
+node [shape = circle]; cannotSentRequest canSendRequest;
+node [shape = octagon]; illegalRequestSent;
+node [shape = point]; _s_s;
+_s_s -> canSendRequest;
+canSendRequest -> cannotSentRequest [ label = "(1) before_request_auth"];
+cannotSentRequest -> canSendRequest [ label = "(1) before_parse_userauth_success"];
+cannotSentRequest -> canSendRequest [ label = "(2) before_parse_userauth_failure"];
+cannotSentRequest -> illegalRequestSent [ label = "(3) before_request_auth"];
+}

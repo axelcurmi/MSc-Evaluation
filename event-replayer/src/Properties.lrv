@@ -211,6 +211,36 @@ GLOBAL
 				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
 				e = e1;
 			}
+
+		before_request_auth(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("_request_auth")
+			} where {
+				e = e1;
+			}
+
+		before_parse_userauth_success(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("_parse_userauth_success")
+			} where {
+				e = e1;
+			}
+
+		before_parse_userauth_failure(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("_parse_userauth_failure")
+			} where {
+				e = e1;
+			}
 	}
 
 	PROPERTY noneCipherProperty
@@ -355,6 +385,24 @@ GLOBAL
 			start -> kexInitSent [ before_send_message \ commandId == 20 ] %% SSH_MSG_KEXINIT
 			kexInitSent -> start [ before_send_message \ commandId == 21 ] %% SSH_MSG_NEWKEYS
 			kexInitSent -> invalidMessageSent [ before_send_message \ !validCommandIdsAfterKexInit.contains(commandId) \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	PROPERTY subsequentAuthRequestsProperty
+	{
+		STATES
+		{
+			BAD { illegalRequestSent }
+			NORMAL { cannotSentRequest }
+			STARTING { canSendRequest }
+		}
+		
+		TRANSITIONS
+		{
+			canSendRequest -> cannotSentRequest [ before_request_auth ]
+			cannotSentRequest -> canSendRequest [ before_parse_userauth_success ]
+			cannotSentRequest -> canSendRequest [ before_parse_userauth_failure ]
+			cannotSentRequest -> illegalRequestSent [ before_request_auth ]
 		}
 	}
 }
