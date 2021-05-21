@@ -1,0 +1,10 @@
+digraph _logic_invalidMessagesProperty {
+rankdir=LR;
+node [shape = circle]; kexInitSent start;
+node [shape = octagon]; invalidMessageSent;
+node [shape = point]; _s_s;
+_s_s -> start;
+start -> kexInitSent [ label = "(1) before_send_message\\commandId == 20 "];
+kexInitSent -> start [ label = "(1) before_send_message\\commandId == 21 "];
+kexInitSent -> invalidMessageSent [ label = "(2) before_send_message\\! validCommandIdsAfterKexInit . contains ( commandId ) \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+}

@@ -1,6 +1,8 @@
 IMPORTS
 {
+	import java.util.Arrays;
 	import java.util.ArrayList;
+
 	import com.axelcurmi.eventreplayer.Event;
 }
 
@@ -10,6 +12,26 @@ GLOBAL
 	{
 		int minimumPacketSize = 8;
 		int AES128BlockSize = 16;
+		
+		%%	1-19		=>	Transport layer generic (e.g., disconnect, ignore, debug, etc.)
+		%%		5	=>	SSH_MSG_SERVICE_REQUEST
+		%%		6	=>	SSH_MSG_SERVICE_ACCEPT
+		%%	20-29		=>	Algorithm negotiation
+		%%		20	=>	SSH_MSG_KEXINIT
+		%%		21	=>	SSH_MSG_NEWKEYS
+ 		%%	30-49		=>	Key exchange method specific (numbers can be reused for different authentication methods)
+		ArrayList<Integer> validCommandIdsAfterKexInit = new ArrayList<Integer>(Arrays.asList(
+				1,  2,  3,  4,  7,  8,  9,  10, 11, 12,
+				13, 14, 15, 16, 17, 18, 19, 21, 22, 23,
+				24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+				34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+				44, 45, 46, 47, 48, 49)
+		);
+		%% Once a party has sent a SSH_MSG_KEXINIT message for key exchange or re-exchange,
+		%% until it has sent a SSH_MSG_NEWKEYS message (Section 7.3), it MUST NOT send any messages other than:
+		%%	- Transport layer generic messages (1 to 19) (but SSH_MSG_SERVICE_REQUEST and SSH_MSG_SERVICE_ACCEPT MUST NOT be sent)
+		%%	- Algorithm negotiation messages (20 to 29) (but further SSH_MSG_KEXINIT messages MUST NOT be sent)
+		%%	- Specific key exchange method messages (30 to 49)
 	}
 
 	EVENTS
@@ -177,6 +199,18 @@ GLOBAL
 				banner = ((String)e1.getWatch().get("banner")).replace("SSH-", "");
 				e = e1;
 			}
+			
+		before_send_message(
+			Event e,
+			int commandId
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("send_message")
+			} where {
+				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
+				e = e1;
+			}
 	}
 
 	PROPERTY noneCipherProperty
@@ -304,6 +338,23 @@ GLOBAL
 			start -> exceptionThrown [ sshexception_check_banner ]
 			start -> noExceptionThrown [ after_check_banner \ !(banner.startsWith("2.0") || banner.startsWith("1.99")) \
 				System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	PROPERTY invalidMessagesProperty
+	{
+		STATES
+		{
+			BAD { invalidMessageSent }
+			NORMAL { kexInitSent }
+			STARTING { start }
+		}
+
+		TRANSITIONS
+		{
+			start -> kexInitSent [ before_send_message \ commandId == 20 ] %% SSH_MSG_KEXINIT
+			kexInitSent -> start [ before_send_message \ commandId == 21 ] %% SSH_MSG_NEWKEYS
+			kexInitSent -> invalidMessageSent [ before_send_message \ !validCommandIdsAfterKexInit.contains(commandId) \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 }
