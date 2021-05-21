@@ -14,7 +14,9 @@ import paramiko
 from paramiko.config import SSH_PORT
 from paramiko.common import (MSG_NEWKEYS,
                              MSG_USERAUTH_SUCCESS,
-                             MSG_USERAUTH_FAILURE)
+                             MSG_USERAUTH_FAILURE,
+                             asbytes)
+from paramiko.py3compat import byte_ord
 
 from pysecube.wrapper import Wrapper
 
@@ -240,6 +242,20 @@ def _parse_kexdh_reply_aspect(*args, **kwargs):
             "paramiko.kex_group14.KexGroup14", {}, [], {})
 aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
                 _parse_kexdh_reply_aspect)
+
+@aspectlib.Aspect
+def send_message_aspect(*args, **kwargs):
+    command_id = byte_ord(asbytes(args[1])[0])
+    add_event("BEFORE", "send_message", "paramiko.Packetizer", {
+        "command_id": command_id
+    }, [], {})
+    try:
+        yield
+    except Exception as e:
+        raise
+    finally:
+        pass
+aspectlib.weave(paramiko.Packetizer.send_message, send_message_aspect)
 
 # Patching
 paramiko.Transport._handler_table[MSG_NEWKEYS] = \
