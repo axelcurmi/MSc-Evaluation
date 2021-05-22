@@ -13,6 +13,14 @@ GLOBAL
 		int minimumPacketSize = 8;
 		int AES128BlockSize = 16;
 		
+		long REKEY_MAX_BYTES = 1073741824l;
+		long REKEY_MAX_PACKETS = 268435456;
+		
+		long cachedSentBytes = 0;
+		long cachedSentPackets = 0;
+		long cachedReceivedBytes = 0;
+		long cachedReceivedPackets = 0;
+		
 		%%	1-19		=>	Transport layer generic (e.g., disconnect, ignore, debug, etc.)
 		%%		5	=>	SSH_MSG_SERVICE_REQUEST
 		%%		6	=>	SSH_MSG_SERVICE_ACCEPT
@@ -169,14 +177,19 @@ GLOBAL
 				e = e1;
 			}
 
-				before_read_message(
-			Event e, boolean isMACEngineSet
+		before_read_message(
+			Event e,
+			boolean isMACEngineSet,
+			long receivedBytes,
+			long receivedPackets
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("BEFORE") &&
 				e1.getWhat().equals("read_message")
 			} where {
 				isMACEngineSet = (boolean)e1.getWatch().get("mac_engine_set");
+				receivedBytes = ((Double)e1.getWatch().get("received_bytes")).longValue();
+				receivedPackets = ((Double)e1.getWatch().get("received_packets")).longValue();
 				e = e1;
 			}
 		
@@ -204,13 +217,17 @@ GLOBAL
 
 		before_send_message(
 			Event e,
-			int commandId
+			int commandId,
+			long sentBytes,
+			long sentPackets
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("BEFORE") &&
 				e1.getWhat().equals("send_message")
 			} where {
 				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
+				sentBytes = ((Double)e1.getWatch().get("sent_bytes")).longValue();
+				sentPackets = ((Double)e1.getWatch().get("sent_packets")).longValue();
 				e = e1;
 			}
 	}
@@ -392,6 +409,43 @@ GLOBAL
 			canSendData -> cannotSendData [ before_send_message \ commandId == 5 ] %% SSH_MSG_SERVICE_REQUEST
 			cannotSendData -> canSendData [ after_read_message \ commandId == 6 ] %% SSH_MSG_SERVICE_ACCEPT
 			cannotSendData -> illegalDataSent [ before_send_message ]
+		}
+	}
+	
+	PROPERTY rekeyProperty
+	{
+		STATES
+		{
+			BAD { missedRekey }
+			NORMAL { postNewKeys }
+			STARTING { kex }
+		}
+		
+		TRANSITIONS
+		{
+			kex -> postNewKeys [ after_parse_newkeys
+				\ \ cachedSentBytes = 0; cachedReceivedBytes = 0; cachedSentPackets = 0; cachedReceivedPackets = 0;
+			]
+
+			postNewKeys -> kex [ before_send_kex_init ]
+
+			postNewKeys -> postNewKeys [ before_send_message
+				\ cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS
+				\ cachedSentBytes = sentBytes;  cachedSentPackets = sentPackets;
+			]
+			postNewKeys -> postNewKeys [ before_read_message
+				\ cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS
+				\ cachedReceivedBytes = receivedBytes;  cachedReceivedPackets = receivedPackets;
+			]
+			
+			postNewKeys -> missedRekey [ before_send_message
+				\ cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS
+				\ System.out.println("--> " + e.toString());
+			]
+			postNewKeys -> missedRekey [ before_read_message
+				\ cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS
+				\ System.out.println("--> " + e.toString());
+			]
 		}
 	}
 }

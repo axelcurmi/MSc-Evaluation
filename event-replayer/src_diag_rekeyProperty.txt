@@ -1,0 +1,13 @@
+digraph _logic_rekeyProperty {
+rankdir=LR;
+node [shape = circle]; postNewKeys kex;
+node [shape = octagon]; missedRekey;
+node [shape = point]; _s_s;
+_s_s -> kex;
+postNewKeys -> kex [ label = "(1) before_send_kex_init"];
+postNewKeys -> postNewKeys [ label = "(2) before_send_message\\cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS \\cachedSentBytes = sentBytes ; cachedSentPackets = sentPackets ; "];
+postNewKeys -> postNewKeys [ label = "(3) before_read_message\\cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS \\cachedReceivedBytes = receivedBytes ; cachedReceivedPackets = receivedPackets ; "];
+postNewKeys -> missedRekey [ label = "(4) before_send_message\\cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+postNewKeys -> missedRekey [ label = "(5) before_read_message\\cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+kex -> postNewKeys [ label = "(1) after_parse_newkeys\\\\cachedSentBytes = 0 ; cachedReceivedBytes = 0 ; cachedSentPackets = 0 ; cachedReceivedPackets = 0 ; "];
+}
