@@ -87,7 +87,9 @@ aspectlib.weave(paramiko.transport.Transport._send_kex_init, _send_kex_init_aspe
 @aspectlib.Aspect
 def read_message_aspect(*args, **kwargs):
     add_event("BEFORE", "read_message", "paramiko.Packetizer", {
-        "mac_engine_set": args[0]._Packetizer__mac_size_in > 0
+        "mac_engine_set": args[0]._Packetizer__mac_size_in > 0,
+        "received_bytes": args[0]._Packetizer__received_bytes,
+        "received_packets": args[0]._Packetizer__received_packets
     }, [], {})
     command_id = None
     try:
@@ -210,7 +212,9 @@ aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
 def send_message_aspect(*args, **kwargs):
     command_id = byte_ord(asbytes(args[1])[0])
     add_event("BEFORE", "send_message", "paramiko.Packetizer", {
-        "command_id": command_id
+        "command_id": command_id,
+        "sent_bytes": args[0]._Packetizer__sent_bytes,
+        "sent_packets": args[0]._Packetizer__sent_packets,
     }, [], {})
     try:
         yield

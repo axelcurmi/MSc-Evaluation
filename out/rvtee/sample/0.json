@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "connect",
         "scope": "paramiko.SSHClient",
@@ -14,7 +14,7 @@
     },
     {
         "id": 1,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_check_banner",
         "scope": "paramiko.Transport",
@@ -26,7 +26,7 @@
     },
     {
         "id": 2,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "_send_kex_init",
         "scope": "paramiko.transport.Transport",
@@ -47,19 +47,21 @@
     },
     {
         "id": 3,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 20
+            "command_id": 20,
+            "sent_bytes": 0,
+            "sent_packets": 0
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 4,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -72,19 +74,21 @@
     },
     {
         "id": 5,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": false
+            "mac_engine_set": false,
+            "received_bytes": 0,
+            "received_packets": 0
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 6,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -96,19 +100,21 @@
     },
     {
         "id": 7,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 30
+            "command_id": 30,
+            "sent_bytes": 632,
+            "sent_packets": 1
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 8,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -121,19 +127,21 @@
     },
     {
         "id": 9,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": false
+            "mac_engine_set": false,
+            "received_bytes": 304,
+            "received_packets": 1
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 10,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -145,7 +153,7 @@
     },
     {
         "id": 11,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "_parse_kexdh_reply",
         "scope": "paramiko.kex_group14.KexGroup14",
@@ -155,7 +163,7 @@
     },
     {
         "id": 12,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "verify_ssh_sig_aspect",
         "scope": "paramiko.ECDSAKey",
@@ -165,19 +173,21 @@
     },
     {
         "id": 13,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 21
+            "command_id": 21,
+            "sent_bytes": 904,
+            "sent_packets": 2
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 14,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -190,7 +200,7 @@
     },
     {
         "id": 15,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_parse_kexdh_reply",
         "scope": "paramiko.kex_group14.KexGroup14",
@@ -200,19 +210,21 @@
     },
     {
         "id": 16,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": false
+            "mac_engine_set": false,
+            "received_bytes": 792,
+            "received_packets": 2
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 17,
-        "timestamp": 1621607672,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -224,7 +236,7 @@
     },
     {
         "id": 18,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_parse_newkeys",
         "scope": "paramiko.Transport",
@@ -236,31 +248,35 @@
     },
     {
         "id": 19,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 0,
+            "received_packets": 0
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 20,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 5
+            "command_id": 5,
+            "sent_bytes": 0,
+            "sent_packets": 0
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 21,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -273,7 +289,7 @@
     },
     {
         "id": 22,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -283,7 +299,7 @@
     },
     {
         "id": 23,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -295,19 +311,21 @@
     },
     {
         "id": 24,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 50
+            "command_id": 50,
+            "sent_bytes": 64,
+            "sent_packets": 1
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 25,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -320,19 +338,21 @@
     },
     {
         "id": 26,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 64,
+            "received_packets": 1
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 27,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -342,7 +362,7 @@
     },
     {
         "id": 28,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -354,31 +374,35 @@
     },
     {
         "id": 29,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 144,
+            "received_packets": 2
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 30,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 5
+            "command_id": 5,
+            "sent_bytes": 720,
+            "sent_packets": 2
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 31,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -391,7 +415,7 @@
     },
     {
         "id": 32,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -401,7 +425,7 @@
     },
     {
         "id": 33,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -413,19 +437,21 @@
     },
     {
         "id": 34,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 50
+            "command_id": 50,
+            "sent_bytes": 784,
+            "sent_packets": 3
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 35,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -438,19 +464,21 @@
     },
     {
         "id": 36,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 208,
+            "received_packets": 3
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 37,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -460,7 +488,7 @@
     },
     {
         "id": 38,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -472,19 +500,21 @@
     },
     {
         "id": 39,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 256,
+            "received_packets": 4
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 40,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "connect",
         "scope": "paramiko.SSHClient",
@@ -494,19 +524,21 @@
     },
     {
         "id": 41,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 90
+            "command_id": 90,
+            "sent_bytes": 880,
+            "sent_packets": 4
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 42,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -519,7 +551,7 @@
     },
     {
         "id": 43,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -529,7 +561,7 @@
     },
     {
         "id": 44,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -541,19 +573,21 @@
     },
     {
         "id": 45,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 912,
+            "received_packets": 5
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 46,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -563,7 +597,7 @@
     },
     {
         "id": 47,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -575,31 +609,35 @@
     },
     {
         "id": 48,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 976,
+            "received_packets": 6
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 49,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 98
+            "command_id": 98,
+            "sent_bytes": 960,
+            "sent_packets": 5
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 50,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -612,7 +650,7 @@
     },
     {
         "id": 51,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -622,7 +660,7 @@
     },
     {
         "id": 52,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -634,19 +672,21 @@
     },
     {
         "id": 53,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1040,
+            "received_packets": 7
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 54,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -656,7 +696,7 @@
     },
     {
         "id": 55,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -668,19 +708,21 @@
     },
     {
         "id": 56,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1088,
+            "received_packets": 8
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 57,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -690,7 +732,7 @@
     },
     {
         "id": 58,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -702,19 +744,21 @@
     },
     {
         "id": 59,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1168,
+            "received_packets": 9
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 60,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -724,7 +768,7 @@
     },
     {
         "id": 61,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -736,19 +780,21 @@
     },
     {
         "id": 62,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1328,
+            "received_packets": 10
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 63,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -758,7 +804,7 @@
     },
     {
         "id": 64,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -770,19 +816,21 @@
     },
     {
         "id": 65,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1376,
+            "received_packets": 11
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 66,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "constant_time_bytes_eq",
         "scope": "paramiko.util",
@@ -792,7 +840,7 @@
     },
     {
         "id": 67,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -804,19 +852,21 @@
     },
     {
         "id": 68,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 96
+            "command_id": 96,
+            "sent_bytes": 1040,
+            "sent_packets": 6
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 69,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -829,19 +879,21 @@
     },
     {
         "id": 70,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "send_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "command_id": 97
+            "command_id": 97,
+            "sent_bytes": 1088,
+            "sent_packets": 7
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 71,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "_build_packet",
         "scope": "paramiko.Packetizer",
@@ -854,19 +906,21 @@
     },
     {
         "id": 72,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "BEFORE",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
         "watch": {
-            "mac_engine_set": true
+            "mac_engine_set": true,
+            "received_bytes": 1424,
+            "received_packets": 12
         },
         "func_args": [],
         "func_kwargs": {}
     },
     {
         "id": 73,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "EOFError",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
@@ -876,7 +930,7 @@
     },
     {
         "id": 74,
-        "timestamp": 1621607673,
+        "timestamp": 1621682804,
         "when": "AFTER",
         "what": "read_message",
         "scope": "paramiko.Packetizer",
