@@ -1,8 +1,8 @@
 import csv
 import ctypes
 import json
+import logging
 import sys
-import threading
 import time
 
 from datetime import datetime
@@ -18,7 +18,6 @@ from paramiko.py3compat import byte_ord
 
 from pysecube.wrapper import Wrapper
 
-# import logging
 # logging.basicConfig()
 # logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
@@ -70,6 +69,15 @@ def add_event(when, what, scope, watch, func_args, func_kwargs):
             "func_kwargs": func_kwargs,
         }
     )
+
+@aspectlib.Aspect
+def handle_aspect(*args):
+    add_event("BEFORE", "handle", "logging.Handler", {}, [], {})
+    yield
+if (not logging.getLogger("paramiko").hasHandlers()):
+    print("Paramiko logger does not have any handlers registered.",
+          "Weaving handle() function.")
+    aspectlib.weave(logging.Handler.handle, handle_aspect)
 
 @aspectlib.Aspect
 def _send_kex_init_aspect(*args, **kwargs):
@@ -207,6 +215,8 @@ def _parse_kexdh_reply_aspect(*args, **kwargs):
             "paramiko.kex_group14.KexGroup14", {}, [], {})
 aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
                 _parse_kexdh_reply_aspect)
+
+
 
 @aspectlib.Aspect
 def send_message_aspect(*args, **kwargs):
