@@ -216,8 +216,6 @@ def _parse_kexdh_reply_aspect(*args, **kwargs):
 aspectlib.weave(paramiko.kex_group14.KexGroup14._parse_kexdh_reply,
                 _parse_kexdh_reply_aspect)
 
-
-
 @aspectlib.Aspect
 def send_message_aspect(*args, **kwargs):
     command_id = byte_ord(asbytes(args[1])[0])
