@@ -40,6 +40,9 @@ GLOBAL
 		%%	- Transport layer generic messages (1 to 19) (but SSH_MSG_SERVICE_REQUEST and SSH_MSG_SERVICE_ACCEPT MUST NOT be sent)
 		%%	- Algorithm negotiation messages (20 to 29) (but further SSH_MSG_KEXINIT messages MUST NOT be sent)
 		%%	- Specific key exchange method messages (30 to 49)
+		
+		boolean identificationStringReceived = false;
+		boolean identificationStringSent = false;
 	}
 
 	EVENTS
@@ -164,18 +167,6 @@ GLOBAL
 			} where {
 				e = e1;
 			}
-			
-		after_check_banner(
-			Event e,
-			String banner
-		) = { Event e1.replay() }
-			filter {
-				e1.getWhen().equals("AFTER") &&
-				e1.getWhat().equals("_check_banner")
-			} where {
-				banner = ((String)e1.getWatch().get("banner")).replace("SSH-", "");
-				e = e1;
-			}
 
 		before_read_message(
 			Event e,
@@ -228,6 +219,40 @@ GLOBAL
 				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
 				sentBytes = ((Double)e1.getWatch().get("sent_bytes")).longValue();
 				sentPackets = ((Double)e1.getWatch().get("sent_packets")).longValue();
+				e = e1;
+			}
+			
+		before_handle(
+			Event e
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("handle")
+			} where {
+				e = e1;
+			}
+			
+		before_write_all(
+			Event e,
+			String message
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("BEFORE") &&
+				e1.getWhat().equals("write_all")
+			} where {
+				message = (String) e1.getWatch().get("message");
+				e = e1;
+			}
+			
+		after_readline(
+			Event e,
+			String message
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("readline")
+			} where {
+				message = (String) e1.getWatch().get("message");
 				e = e1;
 			}
 	}
@@ -343,23 +368,6 @@ GLOBAL
 		}
 	}
 	
-	PROPERTY bannerProperty
-	{
-		STATES
-		{
-			BAD { noExceptionThrown }
-			NORMAL { exceptionThrown }
-			STARTING { start }
-		}
-		
-		TRANSITIONS
-		{
-			start -> exceptionThrown [ sshexception_check_banner ]
-			start -> noExceptionThrown [ after_check_banner \ !(banner.startsWith("2.0") || banner.startsWith("1.99")) \
-				System.out.println("--> " + e.toString()); ]
-		}
-	}
-	
 	PROPERTY invalidMessagesProperty
 	{
 		STATES
@@ -446,6 +454,58 @@ GLOBAL
 				\ cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS
 				\ System.out.println("--> " + e.toString());
 			]
+		}
+	}
+	
+	PROPERTY loggingProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> bad [ before_handle ]
+		}
+	}
+	
+	PROPERTY identificationStringProperty
+	{
+		STATES
+		{
+			ACCEPTING { sentAndReceived }
+			BAD { notSent notReceived }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> start [ before_write_all \ message.startsWith("SSH-") \ identificationStringSent = true; ]
+			start -> start [ after_readline \ message.startsWith("SSH-") \ identificationStringReceived = true; ]
+			start -> sentAndReceived [ before_send_kex_init \ identificationStringSent && identificationStringReceived ]
+			start -> notSent [ before_send_kex_init \ !identificationStringSent \ System.out.println("--> " + e.toString()); ]
+			start -> notReceived [ before_send_kex_init \ !identificationStringReceived \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+
+	PROPERTY serverVersionProperty
+	{
+		STATES
+		{
+			ACCEPTING { exceptionThrown validVersion }
+			BAD { exceptionNotThrown }
+			NORMAL { shouldThrowException }
+			STARTING { start }
+		}
+		
+		TRANSITIONS
+		{
+			start -> shouldThrowException [ after_readline \ !(message.startsWith("SSH-2.0") || message.startsWith("SSH-1.99")) ]
+			start -> validVersion [ before_send_kex_init ]
+			shouldThrowException -> exceptionThrown [ sshexception_check_banner ]
+			shouldThrowException -> exceptionNotThrown [ before_send_kex_init \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 }

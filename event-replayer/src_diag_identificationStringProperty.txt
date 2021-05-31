@@ -1,0 +1,13 @@
+digraph _logic_identificationStringProperty {
+rankdir=LR;
+node [shape = doublecircle]; sentAndReceived;
+node [shape = circle]; start;
+node [shape = octagon]; notSent notReceived;
+node [shape = point]; _s_s;
+_s_s -> start;
+start -> start [ label = "(1) before_write_all\\message . startsWith ( \" SSH- \" ) \\identificationStringSent = true ; "];
+start -> start [ label = "(2) after_readline\\message . startsWith ( \" SSH- \" ) \\identificationStringReceived = true ; "];
+start -> sentAndReceived [ label = "(3) before_send_kex_init\\identificationStringSent && identificationStringReceived "];
+start -> notSent [ label = "(4) before_send_kex_init\\! identificationStringSent \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+start -> notReceived [ label = "(5) before_send_kex_init\\! identificationStringReceived \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+}

@@ -1,0 +1,12 @@
+digraph _logic_serverVersionProperty {
+rankdir=LR;
+node [shape = doublecircle]; exceptionThrown validVersion;
+node [shape = circle]; shouldThrowException start;
+node [shape = octagon]; exceptionNotThrown;
+node [shape = point]; _s_s;
+_s_s -> start;
+shouldThrowException -> exceptionThrown [ label = "(1) sshexception_check_banner"];
+shouldThrowException -> exceptionNotThrown [ label = "(2) before_send_kex_init\\\\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+start -> shouldThrowException [ label = "(1) after_readline\\! ( message . startsWith ( \" SSH-2.0 \" ) || message . startsWith ( \" SSH-1.99 \" ) ) "];
+start -> validVersion [ label = "(2) before_send_kex_init"];
+}

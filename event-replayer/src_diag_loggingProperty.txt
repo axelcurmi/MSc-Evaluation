@@ -1,0 +1,8 @@
+digraph _logic_loggingProperty {
+rankdir=LR;
+node [shape = circle]; start;
+node [shape = octagon]; bad;
+node [shape = point]; _s_s;
+_s_s -> start;
+start -> bad [ label = "(1) before_handle"];
+}

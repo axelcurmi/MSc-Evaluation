@@ -231,7 +231,7 @@ def write_all_aspect(*args):
     # instrumenting this function
     if b"SSH-" in args[1]:
         add_event("BEFORE", "write_all", "paramiko.Packetizer", watch = {
-            "local_banner": str(args[1])
+            "message": args[1].decode()
         })
         ASPECT_TABLE[WRITE_ALL_ASPECT].rollback()
     yield
@@ -246,7 +246,7 @@ def readline_aspect(*args):
     # this function
     if "SSH-" in line:
         add_event("AFTER", "readline", "paramiko.Packetizer", watch = {
-            "remote_banner": line
+            "message": line
         })
         ASPECT_TABLE[READLINE_ASPECT].rollback()
 ASPECT_TABLE[READLINE_ASPECT] = aspectlib.weave(
@@ -263,7 +263,8 @@ if (logging.getLogger("paramiko").hasHandlers()):
           "Rolling back handle() aspect.")
 
 # Variables
-HOST = "192.168.37.136"
+# HOST = "192.168.37.136"
+HOST = "172.20.9.119"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
