@@ -3,19 +3,18 @@ from paramiko.config import SSH_PORT
 
 from pysecube.wrapper import Wrapper
 
-import argparse
 import time
 
-parser = argparse.ArgumentParser(
-    description="PySEcube test driver")
-parser.add_argument("--host", "-H", type=str, required=True)
-parser.add_argument("--username", "-u", type=str, required=True)
-parser.add_argument("--password", "-p", type=str, required=True)
-parser.add_argument("--command", "-c", type=str, required=True)
-parser.add_argument("--reps", "-r", type=int, required=True)
-args = parser.parse_args()
+# Variables
+# HOST = "192.168.37.136"
+HOST = "172.20.9.119"
+USERNAME = "user"
+PASSWORD = "password"
+COMMAND = "uname -a"
+SAVE_TRACE = True
+N = 1
 
-for i in range(args.reps):
+for i in range(N):
     start_time = None
     end_time = None
     
@@ -25,7 +24,7 @@ for i in range(args.reps):
         client = SSHClient()
         client.load_system_host_keys()
 
-        client.connect(args.host, SSH_PORT, args.username, args.password,
+        client.connect(HOST, SSH_PORT, USERNAME, PASSWORD,
             disabled_algorithms={
                 # Force KEX engine to use DH Group 14 with SHA256
                 "kex": [
@@ -42,7 +41,7 @@ for i in range(args.reps):
             }
         )
 
-        client.exec_command(args.command)
+        client.exec_command(COMMAND)
         end_time = time.time()
 
         client.close()

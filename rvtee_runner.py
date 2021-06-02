@@ -331,13 +331,13 @@ for i in range(N):
 
         channel = client.get_transport().open_channel("session")
         channel.exec_command(COMMAND)
-        end_time = time.time()
         stdout = channel.makefile("r", -1)
 
         # Wait for an EOF to be received
         while not channel.eof_received:
             time.sleep(0.1)
-        
+        end_time = time.time()
+
         channel.close()
         print(stdout.read().decode())
         stdout.close()
