@@ -33,8 +33,9 @@ from pysecube.wrapper import Wrapper
     PARSE_KEXDH_REPLY_ASPECT,
     SEND_MESSAGE_ASPECT,
     WRITE_ALL_ASPECT,
-    READLINE_ASPECT
-) = range(0, 13)
+    READLINE_ASPECT,
+    ACTIVATE_OUTBOUND_ASPECT,
+) = range(0, 14)
 
 SAMPLING_RATE_TABLE = {
     BUILD_PACKET_ASPECT: 0.2
@@ -168,13 +169,19 @@ def _parse_newkeys_aspect(*args):
     address = id(args[0].kex_engine.x)
 
     bytes_before = (size * ctypes.c_uint8).from_address(address)
+    engine_before = args[0].packetizer._Packetizer__block_engine_in
+    mac_key_before = args[0].packetizer._Packetizer__mac_key_in
     try:
         yield
     finally:
         bytes_after = (size * ctypes.c_uint8).from_address(address)
+        engine_after = args[0].packetizer._Packetizer__block_engine_in
+        mac_key_after = args[0].packetizer._Packetizer__mac_key_in
         add_event("AFTER", "_parse_newkeys", "paramiko.Transport", watch = {
             "bytes_equal": \
-                all(x == y for x, y in zip(bytes_before, bytes_after))
+                all(x == y for x, y in zip(bytes_before, bytes_after)),
+            "engine_changed": engine_before != engine_after,
+            "mac_key_changed": mac_key_before != mac_key_after
         })
 ASPECT_TABLE[PARSE_NEWKEYS_ASPECT] = aspectlib.weave(
     paramiko.Transport._parse_newkeys, _parse_newkeys_aspect)
@@ -251,6 +258,22 @@ def readline_aspect(*args):
         ASPECT_TABLE[READLINE_ASPECT].rollback()
 ASPECT_TABLE[READLINE_ASPECT] = aspectlib.weave(
     paramiko.Packetizer.readline, readline_aspect)
+
+@aspectlib.Aspect
+def _activate_outbound_aspect(*args):
+    engine_before = args[0].packetizer._Packetizer__block_engine_out
+    mac_key_before = args[0].packetizer._Packetizer__mac_key_out
+    try:
+        yield
+    finally:
+        engine_after = args[0].packetizer._Packetizer__block_engine_out
+        mac_key_after = args[0].packetizer._Packetizer__mac_key_out
+        add_event("AFTER", "_activate_outbound", "paramiko.Transport", watch = {
+            "engine_changed": engine_before != engine_after,
+            "mac_key_changed": mac_key_before != mac_key_after
+        })
+ASPECT_TABLE[ACTIVATE_OUTBOUND_ASPECT] = aspectlib.weave(
+    paramiko.Transport._activate_outbound, _activate_outbound_aspect)
 
 # Patching
 paramiko.Transport._handler_table[MSG_NEWKEYS] = \
