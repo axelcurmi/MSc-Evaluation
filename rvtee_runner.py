@@ -7,12 +7,14 @@ import time
 
 from datetime import datetime
 from os import (path, mkdir)
+from hashlib import sha256
 
 import aspectlib
 import paramiko
 
 from paramiko.config import SSH_PORT
 from paramiko.common import (MSG_NEWKEYS, asbytes)
+from paramiko.message import Message
 from paramiko.py3compat import byte_ord
 
 from pysecube.wrapper import Wrapper
@@ -35,7 +37,8 @@ from pysecube.wrapper import Wrapper
     WRITE_ALL_ASPECT,
     READLINE_ASPECT,
     ACTIVATE_OUTBOUND_ASPECT,
-) = range(0, 14)
+    COMPUTE_KEY_ASPECT,
+) = range(0, 15)
 
 SAMPLING_RATE_TABLE = {
     BUILD_PACKET_ASPECT: 0.2
@@ -50,6 +53,7 @@ OUT_DIR = path.join("out", "rvtee", TEST_TIME)
 trace = []
 timings = []
 
+# Utility functions
 def save_and_clear_trace(trace_id):
     global trace
 
@@ -91,6 +95,26 @@ def add_event(when, what, scope, watch = {}, func_args = [], func_kwargs = {}):
             "func_kwargs": func_kwargs,
         }
     )
+
+# Using the hashlib implementation of hash function to not put more load on the
+# SEcube device, which is already a bottle neck in this setup.
+# Also, how would this function be valid?
+def compute_key(K, H, session_id, id, nbytes):
+    m = Message()
+    m.add_mpint(K)
+    m.add_bytes(H)
+    m.add_byte(id.encode())
+    m.add_bytes(session_id)
+
+    out = sha256(m.asbytes()).digest()
+    while len(out) < nbytes:
+        m = Message()
+        m.add_mpint(K)
+        m.add_bytes(H)
+        m.add_bytes(out)
+
+        out += sha256(m.asbytes()).digest()
+    return out[:nbytes]
 
 @aspectlib.Aspect
 def handle_aspect(*args):
@@ -274,6 +298,17 @@ def _activate_outbound_aspect(*args):
         })
 ASPECT_TABLE[ACTIVATE_OUTBOUND_ASPECT] = aspectlib.weave(
     paramiko.Transport._activate_outbound, _activate_outbound_aspect)
+
+@aspectlib.Aspect
+def _compute_key_aspect(*args):
+    our_key = compute_key(args[0].K, args[0].H, args[0].session_id,
+                      args[1], args[2])
+    paramiko_key = yield
+    add_event("AFTER", "_compute_key", "paramiko.Transport", watch = {
+        "key_match": all(x == y for x, y in zip(our_key, paramiko_key)),
+    })
+ASPECT_TABLE[COMPUTE_KEY_ASPECT] = aspectlib.weave(
+    paramiko.Transport._compute_key, _compute_key_aspect)
 
 # Patching
 paramiko.Transport._handler_table[MSG_NEWKEYS] = \
