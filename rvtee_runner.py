@@ -335,7 +335,7 @@ for i in range(N):
 
         # Wait for an EOF to be received
         while not channel.eof_received:
-            time.sleep(0.1)
+            time.sleep(0.01)
         end_time = time.time()
 
         channel.close()
