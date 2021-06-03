@@ -5,6 +5,6 @@ node [shape = octagon]; noExceptionThrown;
 node [shape = point]; _s_s;
 _s_s -> start;
 shouldThrowException -> start [ label = "(1) sshException_connect"];
-shouldThrowException -> noExceptionThrown [ label = "(2) after_connect"];
+shouldThrowException -> noExceptionThrown [ label = "(2) after_connect\\\\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
 start -> shouldThrowException [ label = "(1) before_connect\\! ( hostInSystemHostKeys || hostInHostKeys ) "];
 }

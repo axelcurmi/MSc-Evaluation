@@ -7,5 +7,5 @@ _s_s -> canSendRequest;
 canSendRequest -> cannotSendRequest [ label = "(1) before_send_message\\commandId == 50 "];
 cannotSendRequest -> canSendRequest [ label = "(1) after_read_message\\commandId == 51 "];
 cannotSendRequest -> canSendRequest [ label = "(2) after_read_message\\commandId == 52 "];
-cannotSendRequest -> illegalRequestSent [ label = "(3) before_send_message\\commandId == 50 "];
+cannotSendRequest -> illegalRequestSent [ label = "(3) before_send_message\\commandId == 50 \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
 }

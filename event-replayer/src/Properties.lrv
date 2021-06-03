@@ -124,13 +124,31 @@ GLOBAL
 		
 		after_parse_newkeys(
 			Event e,
-			boolean bytesEqual
+			boolean bytesEqual,
+			boolean engineChanged,
+			boolean macKeyChanged
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("AFTER") &&
 				e1.getWhat().equals("_parse_newkeys")
 			} where {
 				bytesEqual = (boolean)e1.getWatch().get("bytes_equal");
+				engineChanged = (boolean)e1.getWatch().get("engine_changed");
+				macKeyChanged = (boolean)e1.getWatch().get("mac_key_changed");
+				e = e1;
+			}
+		
+		after_activate_outbound(
+			Event e,
+			boolean engineChanged,
+			boolean macKeyChanged
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("_activate_outbound")
+			} where {
+				engineChanged = (boolean)e1.getWatch().get("engine_changed");
+				macKeyChanged = (boolean)e1.getWatch().get("mac_key_changed");
 				e = e1;
 			}
 			
@@ -267,7 +285,7 @@ GLOBAL
 		
 		TRANSITIONS
 		{
-			good -> bad [ before_send_kex_init \ preferredCiphers.contains("none") ]
+			good -> bad [ before_send_kex_init \ preferredCiphers.contains("none") \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -284,7 +302,7 @@ GLOBAL
 		{
 			start -> shouldThrowException [ before_connect \ !(hostInSystemHostKeys || hostInHostKeys) ]
 			shouldThrowException -> start [ sshException_connect ]
-			shouldThrowException -> noExceptionThrown [ after_connect ]
+			shouldThrowException -> noExceptionThrown [ after_connect \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -302,7 +320,7 @@ GLOBAL
 			start -> shouldCheckMAC [ before_read_message \ isMACEngineSet ]
 			shouldCheckMAC -> start [ before_constant_time_bytes_eq ]
 			shouldCheckMAC -> start [ eof_read_message ]
-			shouldCheckMAC -> notCheckedMAC [ after_read_message ]
+			shouldCheckMAC -> notCheckedMAC [ after_read_message \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -319,7 +337,7 @@ GLOBAL
 		{
 			start -> shouldVerifyHostKey [ before_parse_kexdh_reply ]
 			shouldVerifyHostKey -> start [ before_verify_ssh_sig_aspect ]
-			shouldVerifyHostKey -> notVerifiedHostKey [ after_parse_kexdh_reply ]
+			shouldVerifyHostKey -> notVerifiedHostKey [ after_parse_kexdh_reply \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 
@@ -347,7 +365,7 @@ GLOBAL
 		
 		TRANSITIONS
 		{
-			start -> bad [ after_build_packet \ paddingLength < 4 ]
+			start -> bad [ after_build_packet \ paddingLength < 4 \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -399,7 +417,7 @@ GLOBAL
 			canSendRequest -> cannotSendRequest [ before_send_message \ commandId == 50 ] %% SSH_MSG_USERAUTH_REQUEST
 			cannotSendRequest -> canSendRequest [ after_read_message \ commandId == 51 ] %% SSH_MSG_USERAUTH_FAILURE
 			cannotSendRequest -> canSendRequest [ after_read_message \ commandId == 52 ] %% SSH_MSG_USERAUTH_SUCCESS
-			cannotSendRequest -> illegalRequestSent [ before_send_message \ commandId == 50 ] %% SSH_MSG_USERAUTH_REQUEST
+			cannotSendRequest -> illegalRequestSent [ before_send_message \ commandId == 50 \ System.out.println("--> " + e.toString()); ] %% SSH_MSG_USERAUTH_REQUEST
 		}
 	}
 	
@@ -416,7 +434,7 @@ GLOBAL
 		{
 			canSendData -> cannotSendData [ before_send_message \ commandId == 5 ] %% SSH_MSG_SERVICE_REQUEST
 			cannotSendData -> canSendData [ after_read_message \ commandId == 6 ] %% SSH_MSG_SERVICE_ACCEPT
-			cannotSendData -> illegalDataSent [ before_send_message ]
+			cannotSendData -> illegalDataSent [ before_send_message \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -467,7 +485,7 @@ GLOBAL
 		
 		TRANSITIONS
 		{
-			start -> bad [ before_handle ]
+			start -> bad [ before_handle \ \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
@@ -506,6 +524,34 @@ GLOBAL
 			start -> validVersion [ before_send_kex_init ]
 			shouldThrowException -> exceptionThrown [ sshexception_check_banner ]
 			shouldThrowException -> exceptionNotThrown [ before_send_kex_init \ \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	PROPERTY newKeysSentProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { good }
+		}
+		
+		TRANSITIONS
+		{
+			good -> bad [ after_activate_outbound \ !(engineChanged && macKeyChanged) \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	PROPERTY newKeysReceivedProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { good }
+		}
+		
+		TRANSITIONS
+		{
+			good -> bad [ after_parse_newkeys \ !(engineChanged && macKeyChanged) \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 }
