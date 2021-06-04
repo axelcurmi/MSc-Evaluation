@@ -10,6 +10,8 @@ args = argparser.parse_args()
 total_time_taken = 0
 n = 0
 
+args.file.readline() # consume the first line contains headings
+
 for result in args.file:
     time_taken = result.split(",")[2]
 

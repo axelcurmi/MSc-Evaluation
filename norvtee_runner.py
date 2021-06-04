@@ -13,8 +13,8 @@ HOST = "172.20.9.119"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
-SAVE_TRACE = True
-N = 1
+SAVE_TRACE = False
+N = 1000
 
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
 OUT_DIR = path.join("out", "norvtee", TEST_TIME)
@@ -72,13 +72,13 @@ for i in range(N):
         # Wait for an EOF to be received
         while not channel.eof_received:
             time.sleep(0.01)
-        end_time = time.time()
 
         channel.close()
-        print(stdout.read().decode())
+        print(f"[{i}] {stdout.read().decode()}")
         stdout.close()
 
         client.close()
+        end_time = time.time()
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
         pass

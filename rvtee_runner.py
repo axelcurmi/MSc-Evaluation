@@ -326,8 +326,9 @@ HOST = "172.20.9.119"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
-SAVE_TRACE = True
-N = 1
+SAVE_TRACE = False
+N = 10
+CMD_PER_N = 1
 
 print(f"Result(s) will be saved in {OUT_DIR}")
 
@@ -371,13 +372,14 @@ for i in range(N):
         # Wait for an EOF to be received
         while not channel.eof_received:
             time.sleep(0.01)
-        end_time = time.time()
 
         channel.close()
-        print(stdout.read().decode())
+        print(f"[{i}] {stdout.read().decode()}")
         stdout.close()
 
         client.close()
+        end_time = time.time()
+
         pysecube.destroy()
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
