@@ -9,12 +9,13 @@ from paramiko.config import SSH_PORT
 
 # Variables
 # HOST = "192.168.37.136"
-HOST = "172.20.9.119"
+HOST = "172.17.45.138"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
 SAVE_TRACE = False
-N = 1000
+N = 10
+CMD_PER_N = 1000
 
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")
 OUT_DIR = path.join("out", "norvtee", TEST_TIME)
@@ -65,17 +66,18 @@ for i in range(N):
         )
         print("Connected successfully")
 
-        channel = client.get_transport().open_channel("session")
-        channel.exec_command(COMMAND)
-        stdout = channel.makefile("r", -1)
+        for j in range(CMD_PER_N):
+            channel = client.get_transport().open_channel("session")
+            channel.exec_command(COMMAND)
+            stdout = channel.makefile("r", -1)
 
-        # Wait for an EOF to be received
-        while not channel.eof_received:
-            time.sleep(0.01)
+            # Wait for an EOF to be received
+            while not channel.eof_received:
+                time.sleep(0.01)
 
-        channel.close()
-        print(f"[{i}] {stdout.read().decode()}")
-        stdout.close()
+            channel.close()
+            print(f"[{i}:{j}] {stdout.read().decode()}")
+            stdout.close()
 
         client.close()
         end_time = time.time()
