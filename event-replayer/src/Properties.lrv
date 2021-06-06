@@ -533,6 +533,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 9
 	PROPERTY newKeysSentProperty
 	{
 		STATES
