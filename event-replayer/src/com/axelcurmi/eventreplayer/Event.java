@@ -69,7 +69,7 @@ public class Event {
 	
 	public void replay() {
 		System.out.println(String.format("[%d] %s %s (%s)",
-				timestamp, when, what, scope));
+				id, when, what, scope));
 	}
 
 	@Override

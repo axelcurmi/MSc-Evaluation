@@ -489,6 +489,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 2
 	PROPERTY identificationStringProperty
 	{
 		STATES
@@ -508,6 +509,7 @@ GLOBAL
 		}
 	}
 
+	%% Property 3
 	PROPERTY serverVersionProperty
 	{
 		STATES

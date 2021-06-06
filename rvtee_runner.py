@@ -118,7 +118,8 @@ def compute_key(K, H, session_id, id, nbytes):
 
 @aspectlib.Aspect
 def handle_aspect(*args):
-    add_event("BEFORE", "handle", "logging.Handler")
+    if args[1].levelname != "ERROR":
+        add_event("BEFORE", "handle", "logging.Handler")
     yield
 ASPECT_TABLE[HANDLE_ASPECT] = aspectlib.weave(
     logging.Handler.handle, handle_aspect)
@@ -322,13 +323,13 @@ if (logging.getLogger("paramiko").hasHandlers()):
 
 # Variables
 # HOST = "192.168.37.136"
-HOST = "172.20.9.119"
+HOST = "172.17.45.138"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
-SAVE_TRACE = False
-N = 10
-CMD_PER_N = 1000
+SAVE_TRACE = True
+N = 1
+CMD_PER_N = 1
 
 print(f"Result(s) will be saved in {OUT_DIR}")
 
