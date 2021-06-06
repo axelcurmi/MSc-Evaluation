@@ -307,6 +307,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 16
 	PROPERTY checkMACProperty
 	{
 		STATES
@@ -443,6 +444,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 17
 	PROPERTY rekeyProperty
 	{
 		STATES
