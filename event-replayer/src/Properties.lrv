@@ -325,6 +325,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 8
 	PROPERTY verifyHostKeyProperty
 	{
 		STATES
