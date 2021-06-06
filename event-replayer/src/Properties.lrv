@@ -476,6 +476,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 6
 	PROPERTY loggingProperty
 	{
 		STATES
