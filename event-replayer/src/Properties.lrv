@@ -406,6 +406,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 12
 	PROPERTY subsequentAuthRequestsProperty
 	{
 		STATES
@@ -424,6 +425,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 13
 	PROPERTY subsequentServiceRequestsProperty
 	{
 		STATES
