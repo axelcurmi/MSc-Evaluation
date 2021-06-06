@@ -387,6 +387,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 7
 	PROPERTY invalidMessagesProperty
 	{
 		STATES
