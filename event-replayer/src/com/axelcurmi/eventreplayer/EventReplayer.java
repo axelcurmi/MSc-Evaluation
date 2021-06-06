@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 
 public class EventReplayer {
 	public static void main(String[] args) {
-		String tracePath = "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\traces-with-violations\\property-3.json";
+		String tracePath = "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\traces-with-violations\\property-4.json";
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(tracePath));

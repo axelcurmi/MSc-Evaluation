@@ -275,6 +275,7 @@ GLOBAL
 			}
 	}
 
+	%% Property 4
 	PROPERTY noneCipherProperty
 	{
 		STATES
