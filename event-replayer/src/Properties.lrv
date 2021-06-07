@@ -15,12 +15,12 @@ GLOBAL
 		
 		long REKEY_MAX_BYTES = 1073741824l;
 		long REKEY_MAX_PACKETS = 268435456;
-		
+
 		long cachedSentBytes = 0;
 		long cachedSentPackets = 0;
 		long cachedReceivedBytes = 0;
 		long cachedReceivedPackets = 0;
-		
+
 		%%	1-19		=>	Transport layer generic (e.g., disconnect, ignore, debug, etc.)
 		%%		5	=>	SSH_MSG_SERVICE_REQUEST
 		%%		6	=>	SSH_MSG_SERVICE_ACCEPT
@@ -40,10 +40,10 @@ GLOBAL
 		%%	- Transport layer generic messages (1 to 19) (but SSH_MSG_SERVICE_REQUEST and SSH_MSG_SERVICE_ACCEPT MUST NOT be sent)
 		%%	- Algorithm negotiation messages (20 to 29) (but further SSH_MSG_KEXINIT messages MUST NOT be sent)
 		%%	- Specific key exchange method messages (30 to 49)
-		
+
 		boolean identificationStringReceived = false;
 		boolean identificationStringSent = false;
-		
+
 		long newKeysTimestamp = 0;
 	}
 
@@ -279,6 +279,18 @@ GLOBAL
 				e1.getWhat().equals("readline")
 			} where {
 				message = (String) e1.getWatch().get("message");
+				e = e1;
+			}
+			
+		after_compute_key(
+			Event e,
+			boolean validHash
+		) = { Event e1.replay() }
+			filter {
+				e1.getWhen().equals("AFTER") &&
+				e1.getWhat().equals("_compute_key")
+			} where {
+				validHash = (boolean) e1.getWatch().get("key_match");
 				e = e1;
 			}
 	}
@@ -585,6 +597,21 @@ GLOBAL
 		TRANSITIONS
 		{
 			good -> bad [ after_parse_newkeys \ !(engineChanged && macKeyChanged) \ System.out.println("--> " + e.toString()); ]
+		}
+	}
+	
+	%% Property 11
+	PROPERTY keyHashingProperty
+	{
+		STATES
+		{
+			BAD { bad }
+			STARTING { good }
+		}
+		
+		TRANSITIONS
+		{
+			good -> bad [ after_compute_key \ !validHash \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 }
