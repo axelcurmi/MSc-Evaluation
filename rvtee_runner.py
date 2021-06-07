@@ -326,7 +326,7 @@ if (logging.getLogger("paramiko").hasHandlers()):
 HOST = "172.17.45.138"
 USERNAME = "user"
 PASSWORD = "password"
-COMMAND = "uname -a"
+COMMAND = "date"
 SAVE_TRACE = True
 N = 1
 CMD_PER_N = 1
@@ -366,18 +366,23 @@ for i in range(N):
         )
         print("Connected successfully")
 
-        for j in range(CMD_PER_N):
-            channel = client.get_transport().open_channel("session")
-            channel.exec_command(COMMAND)
-            stdout = channel.makefile("r", -1)
+        t = 0
+        while t < 3900:
+            for j in range(CMD_PER_N):
+                channel = client.get_transport().open_channel("session")
+                channel.exec_command(COMMAND)
+                stdout = channel.makefile("r", -1)
 
-            # Wait for an EOF to be received
-            while not channel.eof_received:
-                time.sleep(0.01)
+                # Wait for an EOF to be received
+                while not channel.eof_received:
+                    time.sleep(0.01)
 
-            channel.close()
-            print(f"[{i}:{j}] {stdout.read().decode()}")
-            stdout.close()
+                channel.close()
+                print(f"[{i}:{j}] {stdout.read().decode()}")
+                stdout.close()
+            print(f"Time: {(t / 60) * 1} mins")
+            t += 60
+            time.sleep(60)
 
         client.close()
         end_time = time.time()
