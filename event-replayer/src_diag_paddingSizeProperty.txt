@@ -4,5 +4,5 @@ node [shape = circle]; start;
 node [shape = octagon]; bad;
 node [shape = point]; _s_s;
 _s_s -> start;
-start -> bad [ label = "(1) after_build_packet\\paddingLength < 4 \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
+start -> bad [ label = "(1) after_build_packet\\paddingLength < 4 || paddingLength > 255 \\System . out . println ( \" -->  \" + e . toString ( ) ) ; "];
 }

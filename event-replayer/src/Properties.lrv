@@ -43,6 +43,8 @@ GLOBAL
 		
 		boolean identificationStringReceived = false;
 		boolean identificationStringSent = false;
+		
+		long newKeysTimestamp = 0;
 	}
 
 	EVENTS
@@ -126,7 +128,8 @@ GLOBAL
 			Event e,
 			boolean bytesEqual,
 			boolean engineChanged,
-			boolean macKeyChanged
+			boolean macKeyChanged,
+			long timestamp
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("AFTER") &&
@@ -135,6 +138,7 @@ GLOBAL
 				bytesEqual = (boolean)e1.getWatch().get("bytes_equal");
 				engineChanged = (boolean)e1.getWatch().get("engine_changed");
 				macKeyChanged = (boolean)e1.getWatch().get("mac_key_changed");
+				timestamp = e1.getTimestamp();
 				e = e1;
 			}
 		
@@ -190,7 +194,8 @@ GLOBAL
 			Event e,
 			boolean isMACEngineSet,
 			long receivedBytes,
-			long receivedPackets
+			long receivedPackets,
+			long timestamp
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("BEFORE") &&
@@ -199,6 +204,7 @@ GLOBAL
 				isMACEngineSet = (boolean)e1.getWatch().get("mac_engine_set");
 				receivedBytes = ((Double)e1.getWatch().get("received_bytes")).longValue();
 				receivedPackets = ((Double)e1.getWatch().get("received_packets")).longValue();
+				timestamp = e1.getTimestamp();
 				e = e1;
 			}
 		
@@ -228,7 +234,8 @@ GLOBAL
 			Event e,
 			int commandId,
 			long sentBytes,
-			long sentPackets
+			long sentPackets,
+			long timestamp
 		) = { Event e1.replay() }
 			filter {
 				e1.getWhen().equals("BEFORE") &&
@@ -237,6 +244,7 @@ GLOBAL
 				commandId = ((Double)e1.getWatch().get("command_id")).intValue();
 				sentBytes = ((Double)e1.getWatch().get("sent_bytes")).longValue();
 				sentPackets = ((Double)e1.getWatch().get("sent_packets")).longValue();
+				timestamp = e1.getTimestamp();
 				e = e1;
 			}
 			
@@ -290,6 +298,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 1
 	PROPERTY newHostProperty
 	{
 		STATES
@@ -344,6 +353,7 @@ GLOBAL
 		}
 	}
 
+	%% Property 18
 	PROPERTY clearedDHValuesProperty
 	{
 		STATES
@@ -358,6 +368,7 @@ GLOBAL
 		}
 	}
 	
+	%% Property 14
 	PROPERTY paddingSizeProperty
 	{
 		STATES
@@ -368,10 +379,11 @@ GLOBAL
 		
 		TRANSITIONS
 		{
-			start -> bad [ after_build_packet \ paddingLength < 4 \ System.out.println("--> " + e.toString()); ]
+			start -> bad [ after_build_packet \ paddingLength < 4 || paddingLength > 255 \ System.out.println("--> " + e.toString()); ]
 		}
 	}
 	
+	%% Property 15
 	PROPERTY packetSizeProperty
 	{
 		STATES
@@ -457,26 +469,35 @@ GLOBAL
 		TRANSITIONS
 		{
 			kex -> postNewKeys [ after_parse_newkeys
-				\ \ cachedSentBytes = 0; cachedReceivedBytes = 0; cachedSentPackets = 0; cachedReceivedPackets = 0;
+				\ \ cachedSentBytes = 0; cachedReceivedBytes = 0; cachedSentPackets = 0; cachedReceivedPackets = 0; newKeysTimestamp = timestamp;
 			]
 
 			postNewKeys -> kex [ before_send_kex_init ]
 
 			postNewKeys -> postNewKeys [ before_send_message
-				\ cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS
-				\ cachedSentBytes = sentBytes;  cachedSentPackets = sentPackets;
+				\ (cachedSentBytes + cachedReceivedBytes) <= REKEY_MAX_BYTES &&
+				  (cachedSentPackets + cachedReceivedPackets) <= REKEY_MAX_PACKETS &&
+				  (timestamp - newKeysTimestamp) <= 3600
+				\ cachedSentBytes = sentBytes; cachedSentPackets = sentPackets;
 			]
+
 			postNewKeys -> postNewKeys [ before_read_message
-				\ cachedSentBytes + cachedReceivedBytes <= REKEY_MAX_BYTES && cachedSentPackets + cachedReceivedPackets <= REKEY_MAX_PACKETS
-				\ cachedReceivedBytes = receivedBytes;  cachedReceivedPackets = receivedPackets;
+				\ (cachedSentBytes + cachedReceivedBytes) <= REKEY_MAX_BYTES &&
+				  (cachedSentPackets + cachedReceivedPackets) <= REKEY_MAX_PACKETS &&
+				  (timestamp - newKeysTimestamp) <= 3600
+				\ cachedReceivedBytes = receivedBytes; cachedReceivedPackets = receivedPackets;
 			]
-			
+
 			postNewKeys -> missedRekey [ before_send_message
-				\ cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS
+				\ (cachedSentBytes + cachedReceivedBytes) > REKEY_MAX_BYTES ||
+				  (cachedSentPackets + cachedReceivedPackets) > REKEY_MAX_PACKETS ||
+				  (timestamp - newKeysTimestamp) > 3600
 				\ System.out.println("--> " + e.toString());
 			]
 			postNewKeys -> missedRekey [ before_read_message
-				\ cachedSentBytes + cachedReceivedBytes > REKEY_MAX_BYTES || cachedSentPackets + cachedReceivedPackets > REKEY_MAX_PACKETS
+				\ (cachedSentBytes + cachedReceivedBytes) > REKEY_MAX_BYTES ||
+				  (cachedSentPackets + cachedReceivedPackets) > REKEY_MAX_PACKETS ||
+				  (timestamp - newKeysTimestamp) > 3600
 				\ System.out.println("--> " + e.toString());
 			]
 		}
