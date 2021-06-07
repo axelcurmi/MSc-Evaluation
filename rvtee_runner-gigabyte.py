@@ -326,10 +326,10 @@ if (logging.getLogger("paramiko").hasHandlers()):
 HOST = "172.23.3.196"
 USERNAME = "user"
 PASSWORD = "password"
-COMMAND = "uname -a"
+COMMAND = "cat 1MB.txt"
 SAVE_TRACE = True
 N = 1
-CMD_PER_N = 1
+CMD_PER_N = 50
 
 print(f"Result(s) will be saved in {OUT_DIR}")
 
@@ -376,7 +376,7 @@ for i in range(N):
                 time.sleep(0.01)
 
             channel.close()
-            print(f"[{i}:{j}] {stdout.read().decode()}")
+            print(f"[{i}:{j}] {len(stdout.read().decode())}")
             stdout.close()
 
         client.close()
