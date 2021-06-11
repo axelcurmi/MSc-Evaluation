@@ -8,7 +8,7 @@ from pysecube.wrapper import Wrapper
 PYSECUBE_PIN = b"test"
 
 # Variables
-HOST = "172.26.247.148"
+HOST = "172.18.139.33"
 USERNAME = "user"
 PASSWORD = "password"
 

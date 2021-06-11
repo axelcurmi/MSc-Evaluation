@@ -8,7 +8,7 @@ from pysecube.wrapper import Wrapper
 PYSECUBE_PIN = b"test"
 
 # Variables
-HOST = "172.26.247.148"
+HOST = "172.18.139.33"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
@@ -33,24 +33,23 @@ client.connect(HOST, SSH_PORT, USERNAME, PASSWORD,
                 "diffie-hellman-group-exchange-sha1",
                 "diffie-hellman-group14-sha1",
                 "diffie-hellman-group1-sha1",
+        ],
+        "macs": [
+            "hmac-sha2-512",
+            "hmac-sha2-256-etm@openssh.com",
+            "hmac-sha2-512-etm@openssh.com",
+            "hmac-sha1",
+            "hmac-md5",
+            "hmac-sha1-96",
+            "hmac-md5-96",
         ]
     },
     pysecube=pysecube
 )
 print("Connected successfully")
 
-channel = client.get_transport().open_channel("session")
-channel.exec_command(COMMAND)
-stdout = channel.makefile("r", -1)
-
-# Wait for an EOF to be received
-while not channel.eof_received:
-    time.sleep(0.01)
-
-channel.close()
+_, stdout, _ = client.exec_command(COMMAND)
 print(stdout.read().decode())
-stdout.close()
 
 client.close()
-
 pysecube.destroy()
