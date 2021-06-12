@@ -323,7 +323,7 @@ if (logging.getLogger("paramiko").hasHandlers()):
 
 # Variables
 # HOST = "192.168.37.136"
-HOST = "172.23.3.196"
+HOST = "172.22.142.140"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
@@ -351,15 +351,15 @@ for i in range(N):
             disabled_algorithms={
                 # Force KEX engine to use DH Group 14 with SHA256
                 "kex": [
-                        "curve25519-sha256@libssh.org",
-                        "ecdh-sha2-nistp256",
-                        "ecdh-sha2-nistp384",
-                        "ecdh-sha2-nistp521",
-                        "diffie-hellman-group16-sha512",
-                        "diffie-hellman-group-exchange-sha256",
-                        "diffie-hellman-group-exchange-sha1",
-                        "diffie-hellman-group14-sha1",
-                        "diffie-hellman-group1-sha1",
+                    "curve25519-sha256@libssh.org",
+                    "ecdh-sha2-nistp256",
+                    "ecdh-sha2-nistp384",
+                    "ecdh-sha2-nistp521",
+                    "diffie-hellman-group16-sha512",
+                    "diffie-hellman-group-exchange-sha256",
+                    "diffie-hellman-group-exchange-sha1",
+                    "diffie-hellman-group14-sha1",
+                    "diffie-hellman-group1-sha1",
                 ]
             },
             pysecube=pysecube
@@ -367,15 +367,7 @@ for i in range(N):
         print("Connected successfully")
 
         for j in range(CMD_PER_N):
-            channel = client.get_transport().open_channel("session")
-            channel.exec_command(COMMAND)
-            stdout = channel.makefile("r", -1)
-
-            # Wait for an EOF to be received
-            while not channel.eof_received:
-                time.sleep(0.01)
-
-            channel.close()
+            _, stdout, _ = client.exec_command(COMMAND)
             print(f"[{i}:{j}] {stdout.read().decode()}")
             stdout.close()
 
