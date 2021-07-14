@@ -5,9 +5,8 @@
         {
             "name": "uname",
             "command": "uname -a",
-            "repetitions": 10,
-            "sessions": [1],
-            "exec_count": [1]
+            "repetitions": 3,
+            "exec_count": 1
         }
     ]
 }

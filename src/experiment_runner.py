@@ -6,27 +6,16 @@ from time import time
 
 import commands
 import util
+import rv
 
 experiments_table = {
     "commands": commands.run
-}
-
-def save_trace(out_dir):
-    def inner(trace_id):
-        import rv
-
-        if not os.path.exists(out_dir):
-            os.mkdir(out_dir)
-
-        with open(os.path.join(out_dir, f"{trace_id}.json"), "w") as stream:
-            json.dump(rv.trace, stream, indent=4)
-
-        rv.trace = []
-    return inner   
+} 
 
 def main():
     import argparse
 
+    # Parse CLI arguments
     argparser = argparse.ArgumentParser("MSc-Evaluation experiment runner")
     argparser.add_argument("config", type=argparse.FileType('r'),
         help="Configuration file")
@@ -35,37 +24,49 @@ def main():
 
     args = argparser.parse_args()
 
+    # Load config and instruction files
     config = json.load(args.config)
     instruction = json.load(args.instruction)
 
     runner = experiments_table[instruction["type"]]
+
+    # Should add instrumentation?
+    instrumentation = "instrumentation" in instruction and \
+        instruction["instrumentation"]
+
+    # Create the destination directory "out/<TIMESTAMP>_<TYPE>_<INSTRUMENTATION>"
+    #   Examples:
+    #       - out/20210713_commands_T
+    #       - out/20210713_shell_F
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    out_dir = os.path.join(config["out_dir"], timestamp) # TODO: Better name?
+    dest_dir = os.path.join(
+        config["out_dir"],
+        "{}_{}_{}".format(timestamp,
+                          instruction["type"],
+                          str(instrumentation)[0]))
+    os.mkdir(dest_dir)
 
-    save_trace_callback = None
-    if "instrumentation" in instruction and instruction["instrumentation"]:
-        import rv
-        rv.weave()
-
-        save_trace_callback = save_trace(out_dir)
-    save_timing = util.save_timing(out_dir)
+    # Weave aspects if we want to add instrumentation
+    if instrumentation:
+        rv.weave
 
     for experiment in instruction["experiments"]:
-        # Fix experiment name in out file names:
-        #   out/20210713/command_instrumentation/uname/timings.csv
-        #   out/20210713/command_instrumentation/uname/0.json
-        print("Running commands experiment with {} repetitions".format(
+        dest_dir = os.path.join(dest_dir, experiment["name"])
+
+        print("Running experiment with {} repetitions".format(
             experiment["repetitions"]))
         for i in range(experiment["repetitions"]):
             print("Starting repetition {}".format(i + 1))
             runner(
                 config=config,
                 experiment=experiment,
-                save_trace_callback=save_trace_callback,
-                save_timing=save_timing
+                save_timing=util.save_timing(dest_dir)
             )
-    
-    util.write_average(out_dir)
+
+            if instrumentation:
+                util.save_trace(dest_dir, i)
+        
+        util.add_stats(dest_dir)
 
 if __name__ == "__main__":
     main()
