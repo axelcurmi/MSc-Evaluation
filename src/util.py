@@ -8,7 +8,7 @@ import rv
 def save_timing(dest_dir):
     def inner(timing):
         if not os.path.exists(dest_dir):
-            os.mkdir(dest_dir)
+            os.makedirs(dest_dir)
 
         add_header = False
         flag = "a"
@@ -29,7 +29,7 @@ def save_timing(dest_dir):
 
 def save_trace(dest_dir, trace_id):
     if not os.path.exists(dest_dir):
-        os.mkdir(dest_dir)
+        os.makedirs(dest_dir)
 
     with open(os.path.join(dest_dir, f"{trace_id}.json"), "w") as stream:
         json.dump(rv.trace, stream, indent=4)

@@ -1,15 +1,23 @@
 from time import time
 
+from pysecube import Wrapper
+
 def run(**kwargs):
     import paramiko
 
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
+    with_secube = False if "with_secube" not in kwargs \
+        else kwargs["with_secube"]
 
-    save_trace = None if "save_trace" not in kwargs else kwargs["save_trace"]
-    save_timing = None if "save_timing" not in kwargs else kwargs["save_timing"]
+    save_timing = None if "save_timing" not in kwargs \
+        else kwargs["save_timing"]
 
     # Initialise SEcube
+    pysecube = None
+    if with_secube:
+        pysecube = Wrapper(b"test")
+        pysecube.crypto_set_time_now()
 
     start_time = time()
     with paramiko.SSHClient() as ssh:
@@ -18,7 +26,22 @@ def run(**kwargs):
             config["host"],
             config["port"],
             config["username"],
-            config["password"]
+            config["password"],
+            disabled_algorithms={
+                # Force KEX engine to use DH Group 14 with SHA256
+                "kex": [
+                    "curve25519-sha256@libssh.org",
+                    "ecdh-sha2-nistp256",
+                    "ecdh-sha2-nistp384",
+                    "ecdh-sha2-nistp521",
+                    "diffie-hellman-group16-sha512",
+                    "diffie-hellman-group-exchange-sha256",
+                    "diffie-hellman-group-exchange-sha1",
+                    "diffie-hellman-group14-sha1",
+                    "diffie-hellman-group1-sha1",
+                ]
+            },
+            pysecube=pysecube
         )
 
         for _ in range(experiment["exec_count"]):

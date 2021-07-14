@@ -1,12 +1,23 @@
 {
     "type": "commands",
-    "instrumentation": true,
     "experiments": [
         {
-            "name": "uname",
+            "name": "uname-1",
             "command": "uname -a",
-            "repetitions": 3,
+            "repetitions": 5,
             "exec_count": 1
+        },
+        {
+            "name": "uname-100",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 100
+        },
+        {
+            "name": "uname-1000",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 1000
         }
     ]
 }
