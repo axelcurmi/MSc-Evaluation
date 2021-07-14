@@ -1,6 +1,6 @@
 {
     "type": "commands",
-    "instrumentation": false,
+    "instrumentation": true,
     "experiments": [
         {
             "name": "uname",

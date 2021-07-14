@@ -48,7 +48,7 @@ def main():
 
     # Weave aspects if we want to add instrumentation
     if instrumentation:
-        rv.weave
+        rv.weave()
 
     for experiment in instruction["experiments"]:
         dest_dir = os.path.join(dest_dir, experiment["name"])
