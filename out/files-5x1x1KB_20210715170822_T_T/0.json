@@ -1,0 +1,35 @@
+[
+    {
+        "id": 0,
+        "timestamp": 1626361702,
+        "when": "BEFORE",
+        "what": "connect",
+        "scope": "paramiko.SSHClient",
+        "watch": {
+            "host_in_system_host_keys": true,
+            "host_in_host_keys": false
+        },
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "id": 1,
+        "timestamp": 1626361723,
+        "when": "TimeoutError",
+        "what": "connect",
+        "scope": "paramiko.SSHClient",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    },
+    {
+        "id": 2,
+        "timestamp": 1626361723,
+        "when": "AFTER",
+        "what": "connect",
+        "scope": "paramiko.SSHClient",
+        "watch": {},
+        "func_args": [],
+        "func_kwargs": {}
+    }
+]
