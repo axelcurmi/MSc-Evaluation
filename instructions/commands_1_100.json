@@ -1,0 +1,17 @@
+{
+    "type": "commands",
+    "experiments": [
+        {
+            "name": "uname-1",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 1
+        },
+        {
+            "name": "uname-100",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 100
+        }
+    ]
+}

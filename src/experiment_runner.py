@@ -8,9 +8,11 @@ import commands
 import util
 import rv
 
+from pysecube import Wrapper
+
 experiments_table = {
     "commands": commands.run
-} 
+}
 
 def main():
     import argparse
@@ -26,6 +28,9 @@ def main():
         help="Runs the Paramiko experiments with RV instrumentation")
     argparser.add_argument("--with-secube", default=False, action="store_true",
         help="Runs the Paramiko experiments using the SEcube HSM")
+    argparser.add_argument("--profiling-memory", default=False,
+        action="store_true",
+        help="Determines whether the memory is being profiled or not")
 
     args = argparser.parse_args()
 
@@ -51,6 +56,12 @@ def main():
     if args.with_instrumentation:
         rv.weave()
 
+    # Create PySEcube wrapper instance
+    pysecube = None
+    if args.with_secube:
+        pysecube = Wrapper(b"test")
+        pysecube.crypto_set_time_now()
+
     for experiment in instruction["experiments"]:
         dest_dir = os.path.join(out_dir, experiment["name"])
 
@@ -61,14 +72,20 @@ def main():
             runner(
                 config=config,
                 experiment=experiment,
-                with_secube=args.with_secube,
-                save_timing=util.save_timing(dest_dir)
+                pysecube=pysecube,
+                save_timing= None if args.profiling_memory \
+                    else util.save_timing(dest_dir) 
             )
 
-            if args.with_instrumentation:
+            if args.with_instrumentation and not args.profiling_memory:
                 util.save_trace(dest_dir, i)
         
-        util.add_stats(dest_dir)
+        if not args.profiling_memory:
+            util.add_stats(dest_dir)
+
+    # Logout and free library handles
+    if pysecube:
+        pysecube.destroy()
 
 if __name__ == "__main__":
     main()

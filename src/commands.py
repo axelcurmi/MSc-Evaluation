@@ -1,23 +1,14 @@
 from time import time
 
-from pysecube import Wrapper
-
 def run(**kwargs):
     import paramiko
 
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
-    with_secube = False if "with_secube" not in kwargs \
-        else kwargs["with_secube"]
+    pysecube = kwargs["pysecube"]
 
     save_timing = None if "save_timing" not in kwargs \
         else kwargs["save_timing"]
-
-    # Initialise SEcube
-    pysecube = None
-    if with_secube:
-        pysecube = Wrapper(b"test")
-        pysecube.crypto_set_time_now()
 
     start_time = time()
     with paramiko.SSHClient() as ssh:
