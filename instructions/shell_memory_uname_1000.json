@@ -1,0 +1,11 @@
+{
+    "type": "shell",
+    "experiments": [
+        {
+            "name": "uname-memory-1000",
+            "command": "uname -a",
+            "repetitions": 1,
+            "exec_count": 1000
+        }
+    ]
+}
