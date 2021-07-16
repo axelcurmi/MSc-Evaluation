@@ -5,13 +5,15 @@ from datetime import datetime
 from time import time
 
 import commands
+import files
 import util
 import rv
 
 from pysecube import Wrapper
 
 experiments_table = {
-    "commands": commands.run
+    "commands": commands.run,
+    "files": files.run
 }
 
 def main():
