@@ -6,6 +6,7 @@ from time import time
 
 import commands
 import files
+import shell
 import util
 import rv
 
@@ -13,7 +14,8 @@ from pysecube import Wrapper
 
 experiments_table = {
     "commands": commands.run,
-    "files": files.run
+    "files": files.run,
+    "shell": shell.run
 }
 
 def main():

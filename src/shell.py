@@ -1,4 +1,4 @@
-from time import time
+from time import (time, sleep)
 
 def run(**kwargs):
     import paramiko
@@ -36,17 +36,16 @@ def run(**kwargs):
         )
 
         shell = ssh.invoke_shell()
-        for _ in range(experiment["exec_count"]):
+        for i in range(experiment["exec_count"]):
             while not shell.send_ready():
-                time.sleep(0.1)
+                sleep(0.05)
 
             shell.send("uname -a\n")
 
             while not shell.recv_ready():
-                time.sleep(0.1)
+                sleep(0.05)
 
-            out = shell.recv(4096)
-            print(out.decode())
+            shell.recv(4096)
         shell.close()
     end_time = time()
 
