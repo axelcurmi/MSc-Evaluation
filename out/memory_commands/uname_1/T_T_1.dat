@@ -1,0 +1,11 @@
+CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe .\src\experiment_runner.py .\config.json .\instructions\commands_memory_uname_1.json --profiling-memory --with-instrumentation --with-secube
+MEM 1.601562 1626423682.1293
+MEM 18.625000 1626423682.2453
+MEM 30.437500 1626423682.3533
+MEM 43.140625 1626423682.4603
+MEM 53.488281 1626423682.5723
+MEM 61.359375 1626423682.6803
+MEM 62.507812 1626423682.7903
+MEM 62.964844 1626423682.9003
+MEM 62.964844 1626423683.0113
+MEM 62.128906 1626423683.1192

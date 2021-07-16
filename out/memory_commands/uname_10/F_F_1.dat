@@ -1,0 +1,9 @@
+CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe .\src\experiment_runner.py .\config.json .\instructions\commands_memory_uname_10.json --profiling-memory
+MEM 1.585938 1626423857.5567
+MEM 20.035156 1626423857.6597
+MEM 35.007812 1626423857.7687
+MEM 48.238281 1626423857.8777
+MEM 56.363281 1626423857.9877
+MEM 61.593750 1626423858.0997
+MEM 61.593750 1626423858.2090
+MEM 60.171875 1626423858.3188
