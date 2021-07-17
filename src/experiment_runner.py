@@ -4,9 +4,12 @@ import os
 from datetime import datetime
 from time import time
 
+# Experiments
 import commands
 import files
 import shell
+import dockercontainers
+
 import util
 import rv
 
@@ -15,7 +18,8 @@ from pysecube import Wrapper
 experiments_table = {
     "commands": commands.run,
     "files": files.run,
-    "shell": shell.run
+    "shell": shell.run,
+    "docker": dockercontainers.run
 }
 
 def main():
@@ -62,7 +66,10 @@ def main():
 
     # Create PySEcube wrapper instance
     pysecube = None
-    if args.with_secube:
+    pysecube_initialised = "pysecube_initialised" in instruction \
+        and instruction["pysecube_initialised"]
+
+    if args.with_secube and not pysecube_initialised:
         pysecube = Wrapper(b"test")
         pysecube.crypto_set_time_now()
 

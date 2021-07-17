@@ -115,10 +115,15 @@ def constant_time_bytes_eq_aspect(*args):
 
 @aspectlib.Aspect
 def connect_aspect(*args, **kwargs):
+    try:
+        hostname = args[1]
+    except IndexError:
+        hostname = kwargs["hostname"]
+
     add_event("BEFORE", "connect", "paramiko.SSHClient", watch = {
         "host_in_system_host_keys": \
-            args[0]._system_host_keys.get(args[1]) is not None,
-        "host_in_host_keys": args[0]._host_keys.get(args[1]) is not None,
+            args[0]._system_host_keys.get(hostname) is not None,
+        "host_in_host_keys": args[0]._host_keys.get(hostname) is not None,
     })
     try:
         yield

@@ -1,0 +1,34 @@
+{
+    "type": "docker",
+    "pysecube_initialised": true,
+    "experiments": [
+        {
+            "name": "alpine_uname-1",
+            "image": "alpine",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 1
+        },
+        {
+            "name": "alpine_uname-10",
+            "image": "alpine",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 10
+        },
+        {
+            "name": "alpine_uname-100",
+            "image": "alpine",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 100
+        },
+        {
+            "name": "alpine_uname-1000",
+            "image": "alpine",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 1000
+        }
+    ]
+}

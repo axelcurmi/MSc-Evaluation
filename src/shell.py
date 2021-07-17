@@ -36,7 +36,7 @@ def run(**kwargs):
         )
 
         shell = ssh.invoke_shell()
-        for i in range(experiment["exec_count"]):
+        for _ in range(experiment["exec_count"]):
             while not shell.send_ready():
                 sleep(0.05)
 
