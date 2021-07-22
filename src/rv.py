@@ -256,8 +256,8 @@ def weave():
     ASPECT_TABLE[CONNECT_ASPECT] = aspectlib.weave(
         paramiko.SSHClient.connect, connect_aspect)
 
-    # ASPECT_TABLE[PARSE_NEWKEYS_ASPECT] = aspectlib.weave(
-    #     paramiko.Transport._parse_newkeys, _parse_newkeys_aspect)
+    ASPECT_TABLE[PARSE_NEWKEYS_ASPECT] = aspectlib.weave(
+        paramiko.Transport._parse_newkeys, _parse_newkeys_aspect)
 
     ASPECT_TABLE[VERIFY_SIG_SSH_ASPECT] = aspectlib.weave(
         paramiko.ECDSAKey.verify_ssh_sig, verify_ssh_sig_aspect)

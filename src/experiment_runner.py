@@ -64,15 +64,6 @@ def main():
     if args.with_instrumentation:
         rv.weave()
 
-    # Create PySEcube wrapper instance
-    pysecube = None
-    pysecube_initialised = "pysecube_initialised" in instruction \
-        and instruction["pysecube_initialised"]
-
-    if args.with_secube and not pysecube_initialised:
-        pysecube = Wrapper(b"test")
-        pysecube.crypto_set_time_now()
-
     for experiment in instruction["experiments"]:
         dest_dir = os.path.join(out_dir, experiment["name"])
 
@@ -83,7 +74,6 @@ def main():
             runner(
                 config=config,
                 experiment=experiment,
-                pysecube=pysecube,
                 save_timing= None if args.profiling_memory \
                     else util.save_timing(dest_dir) 
             )
@@ -93,10 +83,6 @@ def main():
         
         if not args.profiling_memory:
             util.add_stats(dest_dir)
-
-    # Logout and free library handles
-    if pysecube:
-        pysecube.destroy()
 
 if __name__ == "__main__":
     main()

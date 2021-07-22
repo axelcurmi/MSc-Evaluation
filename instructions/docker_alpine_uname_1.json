@@ -1,0 +1,12 @@
+{
+    "type": "docker",
+    "experiments": [
+        {
+            "name": "alpine_uname-1",
+            "image": "alpine",
+            "command": "uname -a",
+            "repetitions": 5,
+            "exec_count": 1
+        }
+    ]
+}
