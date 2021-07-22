@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 
 from pysecube import Wrapper
 
@@ -45,6 +45,7 @@ def run(**kwargs):
     ssh.close()
     end_time = time()
 
+    sleep(0.5)
     pysecube.destroy()
 
     if save_timing:
