@@ -6,4 +6,4 @@ event-replayer/.classpath
 event-replayer/.settings/*
 event-replayer/target/*
 
-testsuite/resources/*.txt
+*/resources
