@@ -6,6 +6,8 @@ import paramiko
 import sys
 import time
 
+from util import save_event
+
 (
     HANDLE_ASPECT,
     SEND_KEX_INIT_ASPECT,
@@ -31,22 +33,32 @@ SAMPLING_RATE_TABLE = {
 ASPECT_TABLE = {}
 
 trace = []
+event_id = 0
 
-def add_event(when, what, scope, watch = {}, func_args = [], func_kwargs = {}):
-    global trace
+buffered_stream = None
 
-    trace.append(
-        {
-            "id": len(trace),
-            "timestamp": int(time.time()),
-            "when": when,
-            "what": what,
-            "scope": scope,
-            "watch": watch,
-            "func_args": func_args,
-            "func_kwargs": func_kwargs,
-        }
-    )
+def set_buffered_stream(stream):
+    global buffered_stream
+    buffered_stream = stream
+
+def add_event(when, what, scope, watch = {}):
+    global trace, event_id
+
+    event = {
+        "id": event_id,
+        "timestamp": int(time.time()),
+        "when": when,
+        "what": what,
+        "scope": scope,
+        "watch": watch
+    }
+
+    event_id += 1
+
+    if buffered_stream is None:
+        trace.append(event)
+    else:
+        save_event(buffered_stream, event)
 
 # Using the hashlib implementation of hash function to not put more load on the
 # SEcube device, which is already a bottle neck in this setup.

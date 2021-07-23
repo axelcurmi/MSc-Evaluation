@@ -2,8 +2,21 @@ import csv
 import json
 import os
 import pandas
+import threading
 
-import rv
+save_event_lock = threading.RLock()
+
+def save_event(stream, event):
+    save_event_lock.acquire()
+    try:
+        stream.seek(0)
+        data = json.loads(stream.read().decode())
+
+        data.append(event)
+        stream.seek(0)
+        stream.write(json.dumps(data).encode())
+    finally:
+        save_event_lock.release()
 
 def save_timing(dest_dir):
     def inner(timing):
@@ -26,15 +39,6 @@ def save_timing(dest_dir):
 
             csv_out.writerow(timing)
     return inner
-
-def save_trace(dest_dir, trace_id):
-    if not os.path.exists(dest_dir):
-        os.makedirs(dest_dir)
-
-    with open(os.path.join(dest_dir, f"{trace_id}.json"), "w") as stream:
-        json.dump(rv.trace, stream, indent=4)
-
-    rv.trace = []
 
 def add_stats(dest_dir):
     timings_file_path = os.path.join(dest_dir, "timings.csv")

@@ -36,9 +36,9 @@ def main():
         help="Runs the Paramiko experiments with RV instrumentation")
     argparser.add_argument("--with-secube", default=False, action="store_true",
         help="Runs the Paramiko experiments using the SEcube HSM")
-    argparser.add_argument("--profiling-memory", default=False,
+    argparser.add_argument("--unbuffered", default=False,
         action="store_true",
-        help="Determines whether the memory is being profiled or not")
+        help="Determines whether the saving of RV events is unbuffered or not")
 
     args = argparser.parse_args()
 
@@ -66,23 +66,36 @@ def main():
 
     for experiment in instruction["experiments"]:
         dest_dir = os.path.join(out_dir, experiment["name"])
+        
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
 
         print("Running experiment with {} repetitions".format(
             experiment["repetitions"]))
         for i in range(experiment["repetitions"]):
+            if args.with_instrumentation:
+                trace_stream = open(os.path.join(dest_dir, f"{i}.json"), "w+b")
+            if not args.unbuffered:
+                trace_stream.write(b"[]")
+                rv.set_buffered_stream(trace_stream)
+
             print("Starting repetition {}".format(i + 1))
             runner(
                 config=config,
                 experiment=experiment,
-                save_timing= None if args.profiling_memory \
-                    else util.save_timing(dest_dir) 
+                save_timing= util.save_timing(dest_dir)
             )
 
-            if args.with_instrumentation and not args.profiling_memory:
-                util.save_trace(dest_dir, i)
-        
-        if not args.profiling_memory:
-            util.add_stats(dest_dir)
+            if args.with_instrumentation and \
+               args.unbuffered:
+                # Save trace in one go
+                json_dump = json.dumps(rv.trace)
+                trace_stream.write(json_dump.encode())
+                # Clear
+                rv.trace = []
+            trace_stream.close()
+
+        util.add_stats(dest_dir)
 
 if __name__ == "__main__":
     main()
