@@ -44,7 +44,8 @@ def run(**kwargs):
     )
 
     for _ in range(experiment["exec_count"]):
-        ssh.exec_command(experiment["command"])
+        _, stdout, _ = ssh.exec_command(experiment["command"])
+        stdout.read()
     ssh.close()
     end_time = time()
 
