@@ -75,25 +75,27 @@ def main():
         for i in range(experiment["repetitions"]):
             if args.with_instrumentation:
                 trace_stream = open(os.path.join(dest_dir, f"{i}.json"), "w+b")
-            if not args.unbuffered:
-                trace_stream.write(b"[]")
-                rv.set_buffered_stream(trace_stream)
+                if not args.unbuffered:
+                    trace_stream.write(b"[]")
+                    rv.set_buffered_stream(trace_stream)
 
             print("Starting repetition {}".format(i + 1))
             runner(
                 config=config,
                 experiment=experiment,
-                save_timing= util.save_timing(dest_dir)
+                save_timing=util.save_timing(dest_dir),
+                with_secube=args.with_secube
             )
 
-            if args.with_instrumentation and \
-               args.unbuffered:
-                # Save trace in one go
-                json_dump = json.dumps(rv.trace)
-                trace_stream.write(json_dump.encode())
-                # Clear
-                rv.trace = []
-            trace_stream.close()
+            if args.with_instrumentation:
+                if args.unbuffered:
+                    # Save trace in one go
+                    json_dump = json.dumps(rv.trace)
+                    trace_stream.write(json_dump.encode())
+                    # Reset
+                    rv.trace = []
+                rv.event_id = 0
+                trace_stream.close()
 
         util.add_stats(dest_dir)
 

@@ -9,12 +9,11 @@ save_event_lock = threading.RLock()
 def save_event(stream, event):
     save_event_lock.acquire()
     try:
-        stream.seek(0)
-        data = json.loads(stream.read().decode())
-
-        data.append(event)
-        stream.seek(0)
-        stream.write(json.dumps(data).encode())
+        stream.seek(-1, os.SEEK_END)
+        if event["id"] > 0:
+            stream.write(b",")
+        stream.write(json.dumps(event).encode())
+        stream.write(b"]")
     finally:
         save_event_lock.release()
 

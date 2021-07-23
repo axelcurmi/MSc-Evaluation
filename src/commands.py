@@ -7,9 +7,12 @@ def run(**kwargs):
 
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
+    with_secube = "with_secube" in kwargs and kwargs["with_secube"]
 
-    pysecube = Wrapper(b"test")
-    pysecube.crypto_set_time_now()
+    pysecube = None
+    if with_secube:
+        pysecube = Wrapper(b"test")
+        pysecube.crypto_set_time_now()
 
     save_timing = None if "save_timing" not in kwargs \
         else kwargs["save_timing"]
@@ -45,8 +48,9 @@ def run(**kwargs):
     ssh.close()
     end_time = time()
 
-    sleep(0.5)
-    pysecube.destroy()
+    if with_secube:
+        sleep(0.5)
+        pysecube.destroy()
 
     if save_timing:
         save_timing([start_time, end_time, end_time - start_time])

@@ -2,26 +2,26 @@
     "type": "commands",
     "experiments": [
         {
-            "name": "uname-1",
-            "command": "uname -a",
+            "name": "128B-1",
+            "command": "cat resources/128B.txt",
             "repetitions": 5,
             "exec_count": 1
         },
         {
-            "name": "uname-10",
-            "command": "uname -a",
+            "name": "128B-10",
+            "command": "cat resources/128B.txt",
             "repetitions": 5,
             "exec_count": 10
         },
         {
-            "name": "uname-100",
-            "command": "uname -a",
+            "name": "128B-100",
+            "command": "cat resources/128B.txt",
             "repetitions": 5,
             "exec_count": 100
         },
         {
-            "name": "uname-1000",
-            "command": "uname -a",
+            "name": "128B-1000",
+            "command": "cat resources/128B.txt",
             "repetitions": 5,
             "exec_count": 1000
         }
