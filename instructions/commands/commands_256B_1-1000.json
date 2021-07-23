@@ -1,0 +1,29 @@
+{
+    "type": "commands",
+    "experiments": [
+        {
+            "name": "256B-1",
+            "command": "cat resources/256B.txt",
+            "repetitions": 5,
+            "exec_count": 1
+        },
+        {
+            "name": "256B-10",
+            "command": "cat resources/256B.txt",
+            "repetitions": 5,
+            "exec_count": 10
+        },
+        {
+            "name": "256B-100",
+            "command": "cat resources/256B.txt",
+            "repetitions": 5,
+            "exec_count": 100
+        },
+        {
+            "name": "256B-1000",
+            "command": "cat resources/256B.txt",
+            "repetitions": 5,
+            "exec_count": 1000
+        }
+    ]
+}
