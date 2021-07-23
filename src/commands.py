@@ -1,10 +1,10 @@
 from time import time, sleep
 
+import paramiko
+
 from pysecube import Wrapper
 
 def run(**kwargs):
-    import paramiko
-
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
     with_secube = "with_secube" in kwargs and kwargs["with_secube"]

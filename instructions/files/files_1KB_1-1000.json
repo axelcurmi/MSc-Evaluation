@@ -1,0 +1,29 @@
+{
+    "type": "files",
+    "experiments": [
+        {
+            "name": "1KB-1",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\1KB.txt",
+            "repetitions": 3,
+            "file_transfers": 1
+        },
+        {
+            "name": "1KB-10",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\1KB.txt",
+            "repetitions": 3,
+            "file_transfers": 10
+        },
+        {
+            "name": "1KB-100",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\1KB.txt",
+            "repetitions": 3,
+            "file_transfers": 100
+        },
+        {
+            "name": "1KB-1000",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\1KB.txt",
+            "repetitions": 3,
+            "file_transfers": 1000
+        }
+    ]
+}

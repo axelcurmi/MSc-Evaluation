@@ -1,13 +1,21 @@
-from time import time
+from time import time, sleep
+
+import paramiko    
+from scp import SCPClient
+
+from pysecube import Wrapper
 
 def run(**kwargs):
-    import paramiko
     
-    from scp import SCPClient
 
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
-    pysecube = kwargs["pysecube"]
+    with_secube = "with_secube" in kwargs and kwargs["with_secube"]
+
+    pysecube = None
+    if with_secube:
+        pysecube = Wrapper(b"test")
+        pysecube.crypto_set_time_now()
 
     save_timing = None if "save_timing" not in kwargs \
         else kwargs["save_timing"]
@@ -40,8 +48,11 @@ def run(**kwargs):
         with SCPClient(ssh.get_transport()) as scp:
             for _ in range(experiment["file_transfers"]):
                 scp.put(experiment["filepath"], 'test.txt')
-
     end_time = time()
+
+    if with_secube:
+        sleep(0.5)
+        pysecube.destroy()
 
     if save_timing:
         save_timing([start_time, end_time, end_time - start_time])
