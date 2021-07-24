@@ -2,7 +2,6 @@ import json
 import os
 
 from datetime import datetime
-from time import time
 
 # Experiments
 import commands
@@ -12,8 +11,6 @@ import dockercontainers
 
 import util
 import rv
-
-from pysecube import Wrapper
 
 experiments_table = {
     "commands": commands.run,
@@ -83,8 +80,9 @@ def main():
             runner(
                 config=config,
                 experiment=experiment,
+                with_secube=args.with_secube,
                 save_timing=util.save_timing(dest_dir),
-                with_secube=args.with_secube
+                add_secube_metrics=util.add_secube_metrics(dest_dir)
             )
 
             if args.with_instrumentation:

@@ -16,6 +16,8 @@ def run(**kwargs):
 
     save_timing = None if "save_timing" not in kwargs \
         else kwargs["save_timing"]
+    add_secube_metrics = None if "add_secube_metrics" not in kwargs \
+        else kwargs["add_secube_metrics"]
 
     start_time = time()
     ssh = paramiko.SSHClient()
@@ -48,6 +50,9 @@ def run(**kwargs):
         stdout.read()
     ssh.close()
     end_time = time()
+
+    if with_secube and add_secube_metrics:
+        add_secube_metrics(pysecube.get_metrics())
 
     if with_secube:
         sleep(0.5)

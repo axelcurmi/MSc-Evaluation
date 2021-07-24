@@ -49,3 +49,21 @@ def add_stats(dest_dir):
         csv_out.writerow([]) # Add blank row
         csv_out.writerow(["", "Avg.", df.mean(axis="index")["time_taken"]])
         csv_out.writerow(["", "Std. Dev.", df.std(axis="index")["time_taken"]])
+
+def add_secube_metrics(dest_dir):
+    def inner(metrics):
+        metrics_file_path = os.path.join(dest_dir, "secube_metrics.json")
+
+        flag = "r+" if os.path.isfile(metrics_file_path) else "w+"
+        with open(metrics_file_path, flag) as stream:
+            data = stream.read()
+
+            if data == "":
+                data = [metrics]
+            else:
+                data = json.loads(data)
+                data.append(metrics)
+
+            stream.seek(0)
+            stream.write(json.dumps(data, indent=4))
+    return inner
