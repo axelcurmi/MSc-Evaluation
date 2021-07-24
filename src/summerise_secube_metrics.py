@@ -19,18 +19,12 @@ def main():
             
             if key not in summary:
                 summary[key] = value
-                continue
-
-            if "count" in key: # Count values
-                assert summary[key] == value, \
-                    "{} should all be equal".format(key)
-            else: # Time values
+            else:
                 summary[key] += value
 
     # Average
     for key, value in summary.items():
-        if "time" in key:
-            summary[key] = value / len(data)
+        summary[key] = value / len(data)
 
     print(json.dumps(summary, indent=4))
 
