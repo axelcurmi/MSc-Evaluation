@@ -6,8 +6,6 @@ from scp import SCPClient
 from pysecube import Wrapper
 
 def run(**kwargs):
-    
-
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
     with_secube = "with_secube" in kwargs and kwargs["with_secube"]
