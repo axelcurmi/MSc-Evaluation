@@ -7,3 +7,5 @@ event-replayer/.settings/*
 event-replayer/target/*
 
 resources/*
+
+*/*html
