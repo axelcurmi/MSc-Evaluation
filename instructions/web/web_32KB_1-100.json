@@ -1,0 +1,23 @@
+{
+    "type": "web",
+    "experiments": [
+        {
+            "name": "32KB-1",
+            "page": "32KB.html",
+            "repetitions": 5,
+            "load_count": 1
+        },
+        {
+            "name": "32KB-10",
+            "page": "32KB.html",
+            "repetitions": 5,
+            "load_count": 10
+        },
+        {
+            "name": "32KB-100",
+            "page": "32KB.html",
+            "repetitions": 5,
+            "load_count": 100
+        }
+    ]
+}

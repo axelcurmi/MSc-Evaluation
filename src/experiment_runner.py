@@ -8,6 +8,7 @@ import commands
 import files
 import shell
 import dockercontainers
+import web
 
 import util
 import rv
@@ -16,7 +17,8 @@ experiments_table = {
     "commands": commands.run,
     "files": files.run,
     "shell": shell.run,
-    "docker": dockercontainers.run
+    "docker": dockercontainers.run,
+    "web": web.run,
 }
 
 def main():
