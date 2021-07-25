@@ -4,19 +4,19 @@
         {
             "name": "928KB-1",
             "page": "928KB.html",
-            "repetitions": 5,
+            "repetitions": 3,
             "load_count": 1
         },
         {
             "name": "928KB-10",
             "page": "928KB.html",
-            "repetitions": 5,
+            "repetitions": 3,
             "load_count": 10
         },
         {
             "name": "928KB-100",
             "page": "928KB.html",
-            "repetitions": 5,
+            "repetitions": 3,
             "load_count": 100
         }
     ]

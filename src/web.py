@@ -63,8 +63,7 @@ def run(**kwargs):
     end_time = time()
     ssh_tunnel.should_stop.set() # Stop the SSH tunnel
     
-    if with_secube:
-        sleep(0.5)
+    sleep(0.5)
 
     if save_timing:
         save_timing([start_time, end_time, end_time - start_time])
