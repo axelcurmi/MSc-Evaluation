@@ -1,0 +1,29 @@
+{
+    "type": "docker",
+    "experiments": [
+        {
+            "name": "alpine_1mb-1",
+            "image": "alpine_1mb",
+            "repetitions": 3,
+            "exec_count": 1
+        },
+        {
+            "name": "alpine_1mb-10",
+            "image": "alpine_1mb",
+            "repetitions": 3,
+            "exec_count": 10
+        },
+        {
+            "name": "alpine_1mb-100",
+            "image": "alpine_1mb",
+            "repetitions": 3,
+            "exec_count": 100
+        },
+        {
+            "name": "alpine_1mb-1000",
+            "image": "alpine_1mb",
+            "repetitions": 3,
+            "exec_count": 1000
+        }
+    ]
+}

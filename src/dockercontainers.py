@@ -1,13 +1,16 @@
-from time import time
+from time import time, sleep
 
 def run(**kwargs):
     import docker
 
     config = kwargs["config"]["ssh"]
     experiment = kwargs["experiment"]
+    with_secube = "with_secube" in kwargs and kwargs["with_secube"]
 
     save_timing = None if "save_timing" not in kwargs \
         else kwargs["save_timing"]
+    add_secube_metrics = None if "add_secube_metrics" not in kwargs \
+        else kwargs["add_secube_metrics"]
 
     client = docker.DockerClient(
         base_url="ssh://{}@{}:{}".format(
@@ -17,19 +20,19 @@ def run(**kwargs):
         )
     )
 
-    try:
-        client.images.get(experiment["image"])
-    except docker.errors.ImageNotFound:
-        client.images.pull(experiment["image"])
-
-    container = client.containers.create(
-        experiment["image"],
-        experiment["command"])
+    container = client.containers.create(experiment["image"])
 
     start_time = time()
     for _ in range(experiment["exec_count"]):
         container.start()
     end_time = time()
+
+    if with_secube and add_secube_metrics:
+        add_secube_metrics(client.api._custom_adapter\
+            .ssh_client.get_transport().pysecube.get_metrics())
+
+    if with_secube:
+        sleep(0.5)
 
     # Remove all stopped containers
     client.containers.prune()
