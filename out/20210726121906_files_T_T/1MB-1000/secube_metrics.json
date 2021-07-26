@@ -1,0 +1,22 @@
+[
+    {
+        "find_key_count": 8,
+        "find_key_time": 0.048999999999999995,
+        "key_edit_count": 16,
+        "key_edit_time": 0.061000000000000006,
+        "crypto_init_count": 88028,
+        "crypto_init_time": 194.26800000006557,
+        "crypto_update_count": 535066,
+        "crypto_update_time": 2681.903000006767
+    },
+    {
+        "find_key_count": 8,
+        "find_key_time": 0.048,
+        "key_edit_count": 16,
+        "key_edit_time": 0.062000000000000006,
+        "crypto_init_count": 88028,
+        "crypto_init_time": 194.5650000000452,
+        "crypto_update_count": 535066,
+        "crypto_update_time": 2680.205000006659
+    }
+]
