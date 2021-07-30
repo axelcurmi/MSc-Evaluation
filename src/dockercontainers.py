@@ -22,9 +22,11 @@ def run(**kwargs):
 
     container = client.containers.create(experiment["image"])
 
+    container.start()
+
     start_time = time()
     for _ in range(experiment["exec_count"]):
-        container.start()
+        container.logs()
     end_time = time()
 
     if with_secube and add_secube_metrics:
