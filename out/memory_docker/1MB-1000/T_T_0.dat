@@ -1,12 +1,4 @@
 CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe src\experiment_runner.py config.json .\instructions\memory\docker\docker_alpine_1MB_1000.json --with-instrumentation --with-secube
-MEM 1.578125 1627927471.8124
-MEM 19.914062 1627927471.9134
-MEM 29.871094 1627927472.0234
-MEM 41.050781 1627927472.1334
-MEM 54.105469 1627927472.2424
-MEM 64.496094 1627927472.3534
-MEM 69.714844 1627927472.4634
-CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe src\experiment_runner.py config.json .\instructions\memory\docker\docker_alpine_1MB_1000.json --with-instrumentation --with-secube
 MEM 1.585938 1627927494.3134
 MEM 20.765625 1627927494.4274
 MEM 30.343750 1627927494.5394
