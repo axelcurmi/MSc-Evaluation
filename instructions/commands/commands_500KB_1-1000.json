@@ -4,25 +4,25 @@
         {
             "name": "500KB-1",
             "command": "cat resources/500KB.txt",
-            "repetitions": 5,
+            "repetitions": 3,
             "exec_count": 1
         },
         {
             "name": "500KB-10",
             "command": "cat resources/500KB.txt",
-            "repetitions": 5,
+            "repetitions": 3,
             "exec_count": 10
         },
         {
             "name": "500KB-100",
             "command": "cat resources/500KB.txt",
-            "repetitions": 5,
+            "repetitions": 3,
             "exec_count": 100
         },
         {
             "name": "500KB-1000",
             "command": "cat resources/500KB.txt",
-            "repetitions": 5,
+            "repetitions": 3,
             "exec_count": 1000
         }
     ]
