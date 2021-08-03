@@ -1,0 +1,11 @@
+{
+    "type": "files",
+    "experiments": [
+        {
+            "name": "500KB-10",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\500KB.txt",
+            "repetitions": 1,
+            "file_transfers": 10
+        }
+    ]
+}
