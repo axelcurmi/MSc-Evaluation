@@ -2,8 +2,8 @@
     "type": "docker",
     "experiments": [
         {
-            "name": "alpine_128B-1000",
-            "image": "alpine_128b",
+            "name": "256B-1000",
+            "image": "alpine_256b",
             "repetitions": 1,
             "exec_count": 1000
         }

@@ -2,7 +2,7 @@
     "type": "docker",
     "experiments": [
         {
-            "name": "alpine_256B-10",
+            "name": "256B-10",
             "image": "alpine_256b",
             "repetitions": 1,
             "exec_count": 10
