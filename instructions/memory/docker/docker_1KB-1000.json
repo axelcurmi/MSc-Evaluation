@@ -2,10 +2,10 @@
     "type": "docker",
     "experiments": [
         {
-            "name": "alpine_1KB-100",
+            "name": "1KB-1000",
             "image": "alpine_1kb",
             "repetitions": 1,
-            "exec_count": 100
+            "exec_count": 1000
         }
     ]
 }
