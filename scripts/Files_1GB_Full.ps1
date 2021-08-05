@@ -1,4 +1,4 @@
-$out = 'out/Files_500KB_Full';
+$out = 'out/Files_1GB_Full';
 
 $experiments = @("1GB-1", "1GB-2")
 
