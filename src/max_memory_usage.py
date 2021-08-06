@@ -1,3 +1,18 @@
+def get_max_memory_usage(file_stream):
+    max_mem = 0
+    for line in file_stream:
+        fields = line.split(" ")
+
+        if fields[0] != "MEM":
+            continue
+        
+        mem = float(fields[1])
+
+        if mem > max_mem:
+            max_mem = mem
+    return max_mem
+
+
 def main():
     import argparse
 
@@ -6,19 +21,8 @@ def main():
         help="Python memory profiler data file")
 
     args = argparser.parse_args()
-
-    mem_max = 0
-    for line in args.mprofile_file:
-        fields = line.split(" ")
-
-        if fields[0] != "MEM":
-            continue
-        
-        mem = float(fields[1])
-
-        if mem > mem_max:
-            mem_max = mem
-    print("MAX MiB: {}".format(mem_max))
+    print("[+] Max memory: {} MiB".format(
+        get_max_memory_usage(args.mprofile_file)))
 
 if __name__ == "__main__":
     main()
