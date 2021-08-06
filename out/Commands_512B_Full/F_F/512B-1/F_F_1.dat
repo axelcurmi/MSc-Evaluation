@@ -1,0 +1,10 @@
+CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe src/experiment_runner.py config.json instructions/memory/commands/commands_512B-1.json --no-calc-stats --out out/Commands_512B_Full
+MEM 1.617188 1628257739.5092
+MEM 20.503906 1628257739.6242
+MEM 30.222656 1628257739.7342
+MEM 41.757812 1628257739.8442
+MEM 55.476562 1628257739.9542
+MEM 66.164062 1628257740.0652
+MEM 67.097656 1628257740.1752
+MEM 67.097656 1628257740.2852
+MEM 67.136719 1628257740.3952
