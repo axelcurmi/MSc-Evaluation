@@ -2,7 +2,7 @@
     "type": "commands",
     "experiments": [
         {
-            "name": "10KB-1",
+            "name": "10KB-10",
             "command": "cat resources/10KB.txt",
             "repetitions": 1,
             "exec_count": 10
