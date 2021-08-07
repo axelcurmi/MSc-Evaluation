@@ -2,10 +2,10 @@
     "type": "files",
     "experiments": [
         {
-            "name": "1GB-1",
+            "name": "1GB-10",
             "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\1GB.txt",
             "repetitions": 1,
-            "file_transfers": 2
+            "file_transfers": 10
         }
     ]
 }
