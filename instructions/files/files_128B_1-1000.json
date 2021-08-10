@@ -1,0 +1,29 @@
+{
+    "type": "files",
+    "experiments": [
+        {
+            "name": "128B-1",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\128B.txt",
+            "repetitions": 3,
+            "file_transfers": 1
+        },
+        {
+            "name": "128B-10",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\128B.txt",
+            "repetitions": 3,
+            "file_transfers": 10
+        },
+        {
+            "name": "128B-100",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\128B.txt",
+            "repetitions": 3,
+            "file_transfers": 100
+        },
+        {
+            "name": "128B-1000",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\128B.txt",
+            "repetitions": 3,
+            "file_transfers": 1000
+        }
+    ]
+}

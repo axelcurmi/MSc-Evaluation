@@ -1,0 +1,52 @@
+[
+    {
+        "find_key_count": 4,
+        "find_key_time": 0.017,
+        "key_edit_count": 8,
+        "key_edit_time": 0.025,
+        "crypto_init_count": 811,
+        "crypto_init_time": 0.8460000000000006,
+        "crypto_update_count": 2625,
+        "crypto_update_time": 2.112999999999938
+    },
+    {
+        "find_key_count": 4,
+        "find_key_time": 0.019,
+        "key_edit_count": 8,
+        "key_edit_time": 0.024,
+        "crypto_init_count": 811,
+        "crypto_init_time": 0.8250000000000006,
+        "crypto_update_count": 2625,
+        "crypto_update_time": 1.8979999999999553
+    },
+    {
+        "find_key_count": 4,
+        "find_key_time": 0.018000000000000002,
+        "key_edit_count": 8,
+        "key_edit_time": 0.024000000000000004,
+        "crypto_init_count": 811,
+        "crypto_init_time": 0.8520000000000006,
+        "crypto_update_count": 2625,
+        "crypto_update_time": 2.2439999999999185
+    },
+    {
+        "find_key_count": 4,
+        "find_key_time": 0.015,
+        "key_edit_count": 8,
+        "key_edit_time": 0.026,
+        "crypto_init_count": 811,
+        "crypto_init_time": 0.8960000000000007,
+        "crypto_update_count": 2625,
+        "crypto_update_time": 2.617999999999889
+    },
+    {
+        "find_key_count": 4,
+        "find_key_time": 0.017,
+        "key_edit_count": 8,
+        "key_edit_time": 0.024999999999999998,
+        "crypto_init_count": 811,
+        "crypto_init_time": 0.8650000000000007,
+        "crypto_update_count": 2625,
+        "crypto_update_time": 2.4859999999999016
+    }
+]

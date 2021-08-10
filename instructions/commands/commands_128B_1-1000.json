@@ -1,0 +1,29 @@
+{
+    "type": "commands",
+    "experiments": [
+        {
+            "name": "128B-1",
+            "command": "cat resources/128B.txt",
+            "repetitions": 5,
+            "exec_count": 1
+        },
+        {
+            "name": "128B-10",
+            "command": "cat resources/128B.txt",
+            "repetitions": 5,
+            "exec_count": 10
+        },
+        {
+            "name": "128B-100",
+            "command": "cat resources/128B.txt",
+            "repetitions": 5,
+            "exec_count": 100
+        },
+        {
+            "name": "128B-1000",
+            "command": "cat resources/128B.txt",
+            "repetitions": 5,
+            "exec_count": 1000
+        }
+    ]
+}

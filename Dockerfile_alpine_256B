@@ -1,0 +1,6 @@
+FROM alpine
+
+RUN apk add perl
+RUN perl -e 'print "A" x (256)' > 256B.txt
+
+CMD ["cat", "256B.txt"]

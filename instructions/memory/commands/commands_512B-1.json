@@ -1,0 +1,11 @@
+{
+    "type": "commands",
+    "experiments": [
+        {
+            "name": "512B-1",
+            "command": "cat resources/512B.txt",
+            "repetitions": 1,
+            "exec_count": 1
+        }
+    ]
+}

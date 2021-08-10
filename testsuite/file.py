@@ -9,12 +9,10 @@ from pysecube.wrapper import Wrapper
 PYSECUBE_PIN = b"test"
 
 # Variables
-HOST = "192.168.1.50"
+HOST = "192.168.1.90"
 USERNAME = "user"
 PASSWORD = "password"
-N = 50
-
-RESOURCE_DIR = path.join(path.relpath(path.dirname(__file__)), "resources")
+N = 1
 
 pysecube = Wrapper(PYSECUBE_PIN)
 pysecube.crypto_set_time_now()
@@ -54,7 +52,7 @@ print("Connected successfully")
 sftp = client.open_sftp()
 
 for i in range(N):
-    sftp.put(path.join(RESOURCE_DIR, "1KB.txt"), f"{i}_1KB.txt")
+    sftp.put(path.join("resources", "1MB.txt"), f"{i}_1MB.txt")
 print("file(s) sent successfully")
 
 sftp.close()

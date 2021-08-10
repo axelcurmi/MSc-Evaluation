@@ -323,13 +323,13 @@ if (logging.getLogger("paramiko").hasHandlers()):
 
 # Variables
 # HOST = "192.168.37.136"
-HOST = "172.22.142.140"
+HOST = "192.168.1.164"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
 SAVE_TRACE = True
 N = 1
-CMD_PER_N = 1
+CMD_PER_N = 1000
 
 print(f"Result(s) will be saved in {OUT_DIR}")
 

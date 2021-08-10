@@ -1,0 +1,17 @@
+{
+    "out_dir": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\out",
+    "ssh": {
+        "host": "192.168.1.90",
+        "port": 22,
+        "username": "user",
+        "password": "password"
+    },
+    "web_remote": {
+        "host": "192.168.1.95",
+        "port": 80
+    },
+    "web_local": {
+        "host": "127.0.0.1",
+        "port": 8000
+    }
+}

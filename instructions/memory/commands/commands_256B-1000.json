@@ -1,0 +1,11 @@
+{
+    "type": "commands",
+    "experiments": [
+        {
+            "name": "256B-1000",
+            "command": "cat resources/256B.txt",
+            "repetitions": 1,
+            "exec_count": 1000
+        }
+    ]
+}

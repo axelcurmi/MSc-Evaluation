@@ -9,12 +9,12 @@ from paramiko.config import SSH_PORT
 
 # Variables
 # HOST = "192.168.37.136"
-HOST = "172.17.45.138"
+HOST = "192.168.1.50"
 USERNAME = "user"
 PASSWORD = "password"
 COMMAND = "uname -a"
 SAVE_TRACE = False
-N = 10
+N = 1
 CMD_PER_N = 1000
 
 TEST_TIME = datetime.now().strftime("%Y%m%d%H%M%S")

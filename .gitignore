@@ -6,4 +6,6 @@ event-replayer/.classpath
 event-replayer/.settings/*
 event-replayer/target/*
 
-resources/*.txt
+resources/*
+
+*/*html

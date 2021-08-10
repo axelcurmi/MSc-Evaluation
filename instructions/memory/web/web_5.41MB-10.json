@@ -1,0 +1,11 @@
+{
+    "type": "web",
+    "experiments": [
+        {
+            "name": "5.41MB-10",
+            "page": "5.41MB.html",
+            "repetitions": 1,
+            "load_count": 10
+        }
+    ]
+}
