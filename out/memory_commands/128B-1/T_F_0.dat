@@ -1,9 +1,0 @@
-CMDLINE c:\users\axelc\appdata\local\programs\python\python39\python.exe .\src\experiment_runner.py .\config.json .\instructions\memory\commands\commands_128B_1.json --with-instrumentation
-MEM 1.597656 1627028431.0573
-MEM 20.796875 1627028431.1720
-MEM 35.464844 1627028431.2810
-MEM 48.164062 1627028431.3923
-MEM 56.503906 1627028431.5030
-MEM 61.808594 1627028431.6130
-MEM 61.808594 1627028431.7240
-MEM 61.812500 1627028431.8350
