@@ -1,0 +1,3 @@
+Docker 1GB - 10
+Commands 1MB - 1000
+Web 18.2MB - 1000
