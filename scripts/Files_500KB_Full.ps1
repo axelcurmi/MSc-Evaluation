@@ -20,8 +20,6 @@ foreach ($i in $experiments) {
     config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --no-calc-stats --out ${out}
     mprof run --out "${out}/T_F/${i}/T_F_1.dat" src/experiment_runner.py `
     config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --no-calc-stats --out ${out}
-    mprof run --out "${out}/T_F/${i}/T_F_2.dat" src/experiment_runner.py `
-    config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --out ${out}
 
     # [-] RV
     # [+] SEcube
@@ -40,6 +38,4 @@ foreach ($i in $experiments) {
     config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --with-secube --no-calc-stats --out ${out}
     mprof run --out "${out}/T_T/${i}/T_T_1.dat" src/experiment_runner.py `
     config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --with-secube --no-calc-stats --out ${out}
-    mprof run --out "${out}/T_T/${i}/T_T_2.dat" src/experiment_runner.py `
-    config.json "instructions/memory/files/files_${i}.json" --with-instrumentation --with-secube --out ${out}
 }

@@ -1,0 +1,11 @@
+{
+    "type": "files",
+    "experiments": [
+        {
+            "name": "512B-1000",
+            "filepath": "C:\\Users\\axelc\\Workspace\\MSc-Evaluation\\resources\\512B.txt",
+            "repetitions": 1,
+            "file_transfers": 1000
+        }
+    ]
+}
