@@ -1,0 +1,11 @@
+{
+    "type": "docker",
+    "experiments": [
+        {
+            "name": "500kb-100",
+            "image": "alpine_500kb",
+            "repetitions": 1,
+            "exec_count": 100
+        }
+    ]
+}

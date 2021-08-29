@@ -1,6 +1,0 @@
-FROM alpine
-
-RUN apk add perl
-RUN perl -e 'print "A" x (512 * 1024)' > 512KB.txt
-
-CMD ["cat", "512KB.txt"]

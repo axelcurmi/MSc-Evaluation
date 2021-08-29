@@ -12,6 +12,7 @@ def run(**kwargs):
     add_secube_metrics = None if "add_secube_metrics" not in kwargs \
         else kwargs["add_secube_metrics"]
 
+    start_time = time()
     client = docker.DockerClient(
         base_url="ssh://{}@{}:{}".format(
             config["username"],
@@ -21,12 +22,11 @@ def run(**kwargs):
     )
 
     container = client.containers.create(experiment["image"])
-
     container.start()
 
-    start_time = time()
     for _ in range(experiment["exec_count"]):
-        container.logs()
+        logs = container.logs()
+        assert(len(logs) > 0)
     end_time = time()
 
     if with_secube and add_secube_metrics:
